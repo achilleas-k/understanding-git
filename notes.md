@@ -6,7 +6,7 @@ Shell commands will be prefixed by `$` and the output will follow without any pr
 
 ## Variables instead of examples
 
-I'll be using shell variable notation in place of remote names, branch names, commit messages, etc. The purpose is to point out which things are commands and flags and which are names or free text. For instance, although the names `origin` and `master` are convention and the default names for the remote and branch respectively, they could be named anything. So by putting up `git push $remote $branch` instead of `git push origin master`, what I'm trying to emphasise is that the words `origin` and `master` hold no special meaning. It also makes it easier to see the form of the command instead of an example of it from which you would need to infer the form.
+I'll be using shell variable notation in place of remote names, branch names, commit messages, etc. This makes it clearer which things are commands and flags and which are names or free text. For instance, although the names `origin` and `master` are the default names for the remote and branch respectively, they could be named anything. So by putting up `git push $remote $branch` instead of `git push origin master`, what I want to emphasise is that the words `origin` and `master` hold no special meaning. It also makes it easier to see the form of the command instead of an example of it from which you would need to infer the form.
 
 ---
 

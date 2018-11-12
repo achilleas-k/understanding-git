@@ -31,16 +31,18 @@ Like this
 
 ## Variables instead of examples
 
-I'll be using shell variable notation in place of remote names, branch names, commit messages, etc.
-So instead of, for example:
-```bash
-$ git commit -m "Initial commit: Add README and templates"
-$ git push origin master
-```
-I'll be showing:
+Shell variable notation will be used in place of remote names, branch names, commit messages, etc.
+
+For example:
 ```bash
 $ git commit -m $commitmsg
 $ git push $remote $branch
+```
+
+Instead of:
+```bash
+$ git commit -m "Initial commit: Add README and templates"
+$ git push origin master
 ```
 
 ---
