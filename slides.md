@@ -50,7 +50,10 @@ $ git push origin master
 # Part 1
 ## Porcelain and Plumbing
 
-* What the hell are you talking about?
+Note:
+The Git manual and documentation pages separate commands into *porcelain* and *plumbing* commands. These are high level and low level commands, respectively. The metaphor being that *plumbing* is what happens behind the scenes, out of sight. In contrast, *porcelain* refers to the parts of the system that the user interacts with directly.
+
+
 
 ---
 
@@ -64,6 +67,25 @@ echo "This is bash version $(bash --version)"
 def prmsg():
   print("This is Python code")
 ```
+
+---
+
+# Part 1.5
+## Hash functions
+
+What is a hash function?
+
+---
+
+# Part 2
+## What is Git and what does it do?
+
+---
+
+Which of these statements are true?
+- Git is a version-control system for source code
+- Git keeps track of file changes across versions
+- Git is a backup tool
 
 ---
 
