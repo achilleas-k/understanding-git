@@ -77,7 +77,9 @@ Git uses cryptographic hashes (SHA-1) to identify objects.
 
 Source: https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain
 
-At its core, Git is a database of objects and each object is addressable by its SHA-1 hash. Every other feature is implemented by tools and functions that manipulate this database.
+At its core, Git is a key-value store, database of objects where each object is addressable by its SHA-1 hash. Every other feature is implemented by tools and functions that manipulate this database.
+
+We insert objects into the database, Git gives us a key (SHA-1 hash) of the objects, and then we use the keys to retrieve the objects.
 
 ---
 
@@ -87,14 +89,15 @@ At its core, Git is a database of objects and each object is addressable by its 
 - Tree: The equivalent of a directory.
 - Commit: A single snapshot of the repository.
 
-
-
 ---
 
 # Part 3
-## The good part
+## Get to the point
 
 ---
+
+The Git object hierarchy
+
 
 ---
 

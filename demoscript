@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+mdprint() {
+    cmd=$*
+    echo '```bash'
+    echo '$' ${cmd}
+    eval ${cmd}
+    echo '```'
+}
+
+tmpdir=$(mktemp -d)
+pushd ${tmpdir}
+
+# delete temporary directory on script exit
+trap "rm -fr ${tmpdir}" 0
+
+# Initialise repository
+mdprint git init
+
+# No objects here yet
+mdprint tree -F .git/objects
+
+# Add a README and commit
+mdprint 'echo "# Understanding Git" > README.md'
+mdprint git add README.md
+mdprint 'git commit -m "Initial commit: Add README"'
+
+# Check the object store again
+mdprint tree -F .git/objects
+
+# These objects are compressed (and sometimes packed) so we can't read them directly
+# Instead
+mdprint git rev-parse HEAD
+
+mdprint git cat-file -t HEAD
+mdprint git cat-file -p HEAD
+
+# Let's make one more commit so we can see the parent
+mdprint 'echo -e "# Understanding Git\n\n> Achilleas Koutsou\n\n2018-11-14" > slides.md'
+mdprint git add slides.md
+mdprint 'git commit -m "Add first presentation slide"'
+
+# Let's inspect the tree
+tree=$(git cat-file -p HEAD | grep ^tree | cut -d' ' -f2)
+mdprint git cat-file -t ${tree}
+mdprint git cat-file -p ${tree}
+
+blob=$(git cat-file -p ${tree} | grep README.md | cut -d' ' -f3 | cut -f1)
+mdprint git cat-file -t ${blob}
+mdprint git cat-file -p ${blob}
+
+blob=$(git cat-file -p ${tree} | grep slides.md | cut -d' ' -f3 | cut -f1)
+mdprint git cat-file -t ${blob}
+mdprint git cat-file -p ${blob}

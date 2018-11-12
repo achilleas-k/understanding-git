@@ -1,0 +1,11 @@
+p { text-align: left; }
+
+.reveal blockquote {
+    width: 90%;
+    padding: 0 5%;
+}
+
+.reveal pre {
+    width: 100%;
+    align: left;
+}
