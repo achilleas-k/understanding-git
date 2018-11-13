@@ -74,8 +74,6 @@ for path in ${filepaths2}; do
     mdprint git cat-file -p ${full}
 done
 
-exit
-
 # Look at the new HEAD
 mdprint git cat-file -p HEAD
 
@@ -91,3 +89,5 @@ mdprint git cat-file -p ${blob}
 blob=$(git cat-file -p ${tree} | grep slides.md | cut -d' ' -f3 | cut -f1)
 mdprint git cat-file -t ${blob}
 mdprint git cat-file -p ${blob}
+
+git log --reverse --pretty=format:"Commit: %H%n    Message: %s%n    Parent: %P%n    Tree: %T%n%n"

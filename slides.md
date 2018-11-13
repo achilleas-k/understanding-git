@@ -484,6 +484,35 @@ Let's generalise the graph and assume we have a lot more commits.
 Note:
 Add the information we know are contained in a commit
 
+A parent link that points to the previous commit
+
+Some metadata (which we don't really care about now)
+
+And a tree.
+
+Note that the first commit has no parent, but for consistency we're keeping the general form of the object.
+
+---
+
+## Trees and blobs
+
+
+![Trees and blobs](./images/trees-blobs.png)
+
+Note:
+We've seen that trees are lists of filenames, but they can also hold subdirectories, which are references to other trees.
+
+With all this, we can now draw a graph of our actual repository.
+
+---
+
+## Our repository
+
+![Repository graph](./images/actual.png)
+
+Note:
+Notice that the readme in the second tree points to the same blob from the first tree.
+
 ---
 
 `rev-parse`
