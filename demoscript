@@ -59,9 +59,10 @@ mdprint 'git commit -m "Add first presentation slide"'
 # Check the object store again
 mdprint tree -F .git/objects
 
+mdprint find .git/objects -type f
+
 filepaths2=$(find .git/objects -type f)
 
-echo "================ CUT HERE ==============="
 # git cat-file on each *new* object
 for path in ${filepaths2}; do
     if echo ${filepaths1} | grep ${path} &> /dev/null; then
@@ -72,22 +73,35 @@ for path in ${filepaths2}; do
     full=${prefix}${rest}
     mdprint git cat-file -t ${full}
     mdprint git cat-file -p ${full}
+    if git cat-file -p ${full} | grep "Understanding Git" &> /dev/null; then
+        slidesfirstver=${full}
+    fi
 done
 
-# Look at the new HEAD
-mdprint git cat-file -p HEAD
+echo "--------------------------"
+# Add a new slide
+mdprint 'echo -e "\n\n# Part 1\n## Porcelain and Plumbing" >> slides.md'
+mdprint git add slides.md
+mdprint 'git commit -m "Add second presentation slide"'
 
-# Let's inspect the tree
-tree=$(git cat-file -p HEAD | grep ^tree | cut -d' ' -f2)
-mdprint git cat-file -t ${tree}
-mdprint git cat-file -p ${tree}
+# Check the object store again
+mdprint tree -F .git/objects
+mdprint find .git/objects -type f
 
-blob=$(git cat-file -p ${tree} | grep README.md | cut -d' ' -f3 | cut -f1)
-mdprint git cat-file -t ${blob}
-mdprint git cat-file -p ${blob}
+filepaths3=$(find .git/objects -type f)
 
-blob=$(git cat-file -p ${tree} | grep slides.md | cut -d' ' -f3 | cut -f1)
-mdprint git cat-file -t ${blob}
-mdprint git cat-file -p ${blob}
+# git cat-file on each *new* object
+for path in ${filepaths3}; do
+    if echo ${filepaths2} | grep ${path} &> /dev/null; then
+        continue
+    fi
+    prefix=${path:13:2}
+    rest=${path:16}
+    full=${prefix}${rest}
+    mdprint git cat-file -t ${full}
+    mdprint git cat-file -p ${full}
+done
+
+mdprint git cat-file -p ${slidesfirstver}
 
 git log --reverse --pretty=format:"Commit: %H%n    Message: %s%n    Parent: %P%n    Tree: %T%n%n"

@@ -173,7 +173,6 @@ Initialized empty Git repository in $directory
 
 Our object store is empty
 ```bash
-$ tree -F .git/objects
 .git/objects
 ├── info/
 └── pack/
@@ -212,7 +211,6 @@ Nb: Empty commit messages are allowed, but it's almost never a good idea to crea
 
 Check the object store again
 ```bash
-$ tree -F .git/objects
 .git/objects
 ├── 32/
 │   └── c65e86d72d50be78c536f79d8036604eb713b1
@@ -222,8 +220,6 @@ $ tree -F .git/objects
 │   └── d0c23a90b9a55df7caa0c5c182254ace2e0be4
 ├── info/
 └── pack/
-
-5 directories, 3 files
 ```
 
 Three objects. What do they represent?
@@ -342,31 +338,19 @@ $ git commit -m "Add first presentation slide"
 [master e9cb79d] Add first presentation slide
  1 file changed, 1 insertion(+)
   create mode 100644 slides.md
-  ```
+```
 
 Note:
 Let's create a second commit and run through our inspection process again.
 
 ---
 ```bash
-$ tree -F .git/objects
-.git/objects
-├── 32/
-│   └── c65e86d72d50be78c536f79d8036604eb713b1
-├── 38/
-│   └── 781ad1a6eb9cd94c0db2bffabe71a9fc7084a1
-├── 45/
-│   └── 8334281a1cfca627123e2551a8dabcbd5923cf
-├── 94/
-│   └── 6086806911f33c726b8e4088bb3ea5a28ac7a2
-├── 9a/
-│   └── d0e42db978b24a42b0de609a7eadcf1d5f04dd
-├── dc/
-│   └── d0c23a90b9a55df7caa0c5c182254ace2e0be4
-├── info/
-└── pack/
-
-8 directories, 6 files
+.git/objects/f1/5a0bca73aef6fa1abac7e574b8143d4164889e
+.git/objects/38/781ad1a6eb9cd94c0db2bffabe71a9fc7084a1
+.git/objects/94/6086806911f33c726b8e4088bb3ea5a28ac7a2
+.git/objects/eb/4863188fedc82c6b3329a5b7955e0068be6d13
+.git/objects/dc/d0c23a90b9a55df7caa0c5c182254ace2e0be4
+.git/objects/32/c65e86d72d50be78c536f79d8036604eb713b1
 ```
 
 3 new objects
@@ -459,59 +443,121 @@ So what we've learned here is that the new commit has a `parent` reference, whic
 
 ---
 
-## Revision graph
+Third commit
 
-![Two commit graph (simple)](./images/two-commits-simple.png)
+```bash
+$ echo "---
+
+# Part 1
+## Porcelain and Plumbing" >> slides.md
+```
+```bash
+$ git add slides.md
+```
+```bash
+$ git commit -m "Add second presentation slide"
+[master f0d367a] Add second presentation slide
+ 1 file changed, 4 insertions(+)
+```
 
 Note:
-Currently, our Git repository's history looks like this. We have an initial commit, and a followup commit that references the initial one.
+Let's do one more commit. This time, we'll modify an existing file. We'll add a second presentation slide to slides.md
 
 ---
 
-## Revision graph
+```bash
+.git/objects/12/4e8d9f4e78f2fb2e478bbfd57b29c23f04e854
+.git/objects/37/1aab1c5585c1b426385128946f772d409a26f8
+.git/objects/f5/a1828f86e3aeb2aad46ebb7e69144179849ae4
+.git/objects/40/641b176048c07e570f72fae8e0bd5f9d1c4cbf
+.git/objects/38/781ad1a6eb9cd94c0db2bffabe71a9fc7084a1
+.git/objects/94/6086806911f33c726b8e4088bb3ea5a28ac7a2
+.git/objects/eb/8152b977c2bf99528d40efe2e3094ca2b2524e
+.git/objects/dc/d0c23a90b9a55df7caa0c5c182254ace2e0be4
+.git/objects/32/c65e86d72d50be78c536f79d8036604eb713b1
+```
 
-![Graph (simple)](./images/rev-graph-simple.png)
+3 new objects
 
 Note:
-Let's generalise the graph and assume we have a lot more commits.
+Again, three new objects. I hope this isn't a surprise by now.
 
 ---
 
-## Revision graph
+```bash
+$ git cat-file -t f0d367ac211d2aeaaca5acb82ca5408a698284a5
+commit
+```
 
-![Graph](./images/rev-graph.png)
+```bash
+$ git cat-file -p f0d367ac211d2aeaaca5acb82ca5408a698284a5
+tree 5e605f1c012c4da9064a8d7527eed85f4c6c1093
+parent ee7c8085bac4e4cfc5a239a8ab1a0cade30ef780
+author Achilleas Koutsou <ak@example.com> 1542132946 +0100
+committer Achilleas Koutsou <ak@example.com> 1542132946 +0100
+
+Add second presentation slide
+```
 
 Note:
-Add the information we know are contained in a commit
-
-A parent link that points to the previous commit
-
-Some metadata (which we don't really care about now)
-
-And a tree.
-
-Note that the first commit has no parent, but for consistency we're keeping the general form of the object.
+The new commit
 
 ---
 
-## Trees and blobs
-
-
-![Trees and blobs](./images/trees-blobs.png)
+```bash
+$ git cat-file -t 5e605f1c012c4da9064a8d7527eed85f4c6c1093
+tree
+```
+```bash
+$ git cat-file -p 5e605f1c012c4da9064a8d7527eed85f4c6c1093
+100644 blob 32c65e86d72d50be78c536f79d8036604eb713b1	README.md
+100644 blob e0097861ecddb9721b29d30e6c08838008fb4d0f	slides.md
+```
 
 Note:
-We've seen that trees are lists of filenames, but they can also hold subdirectories, which are references to other trees.
+The new tree.
 
-With all this, we can now draw a graph of our actual repository.
+Here we see something new. The tree appears to be the same as the old one, but the difference is in the key (the hash) of slides.md. It's the same filename, but it has different content, since we added more text to it.
+
+So now, as far as Git is concerned, this is a completely new object. The fact that there are two entries in two different trees both called slides.md doesn't matter. It's just a symbolic name. The true key, or identifier of the content of the file is the hash.
 
 ---
 
-## Our repository
+```bash
+$ git cat-file -t e0097861ecddb9721b29d30e6c08838008fb4d0f
+blob
+```
+```bash
+$ git cat-file -p e0097861ecddb9721b29d30e6c08838008fb4d0f
+# Understanding Git
 
-![Repository graph](./images/actual.png)
+> Achilleas Koutsou
+
+2018-11-14
+
+# Part 1
+## Porcelain and Plumbing
+```
 
 Note:
-Notice that the readme in the second tree points to the same blob from the first tree.
+So if we check the contents of the new hash, we get the new file in its entirety.
+
+---
+
+We can still retrieve the first version of the file
+```bash
+$ git cat-file -p 946086806911f33c726b8e4088bb3ea5a28ac7a2
+# Understanding Git
+
+> Achilleas Koutsou
+
+2018-11-14
+```
+
+Note:
+The original version of the file is of course still available using its hash. The object is still available in the object store, it just isn't part of the working directory. In Git terms: the original blob is not referenced by the tree of the current commit.
+
+---
 
 ---
 
@@ -562,28 +608,6 @@ Initial commit: Add README
 ---
 
 Our current `HEAD` is the first commit; it doesn't have a parent.
-
----
-
-
-Simplified commit graph
-
-![Two commit graph (simple)](./images/two-commit-graph-simple.png)
-
-- Child commit `bbbbb` points to parent `aaaaa`
-- `HEAD` is a symbolic reference to `bbbbb`
-
----
-
-Full commit graph
-
-![Two commit graph](./images/two-commit-graph.png)
-
----
-
-Full commit graph with tree representations
-
-![Two commit graph (with trees)](./images/two-commit-graph-trees.png)
 
 ---
 
