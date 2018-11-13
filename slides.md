@@ -1,6 +1,7 @@
 ---
 title: Understanding Git
 theme: black
+css: style.css
 revealOptions:
   transition: 'none'
 
