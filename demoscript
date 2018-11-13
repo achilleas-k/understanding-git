@@ -19,6 +19,10 @@ trap "rm -fr ${tmpdir}" 0
 # Initialise repository
 mdprint git init
 
+git config --local user.name "Achilleas Koutsou"
+git config --local user.email "ak@example.com"
+
+
 # No objects here yet
 mdprint tree -F .git/objects
 
@@ -30,8 +34,18 @@ mdprint 'git commit -m "Initial commit: Add README"'
 # Check the object store again
 mdprint tree -F .git/objects
 
-# These objects are compressed (and sometimes packed) so we can't read them directly
-# Instead
+filepaths1=$(find .git/objects -type f)
+
+# git cat-file on each object
+for path in ${filepaths1}; do
+    prefix=${path:13:2}
+    rest=${path:16}
+    full=${prefix}${rest}
+    mdprint git cat-file -t ${full}
+    mdprint git cat-file -p ${full}
+done
+
+# These objects are compressed so we can't read them directly
 mdprint git rev-parse HEAD
 
 mdprint git cat-file -t HEAD
@@ -41,6 +55,29 @@ mdprint git cat-file -p HEAD
 mdprint 'echo -e "# Understanding Git\n\n> Achilleas Koutsou\n\n2018-11-14" > slides.md'
 mdprint git add slides.md
 mdprint 'git commit -m "Add first presentation slide"'
+
+# Check the object store again
+mdprint tree -F .git/objects
+
+filepaths2=$(find .git/objects -type f)
+
+echo "================ CUT HERE ==============="
+# git cat-file on each *new* object
+for path in ${filepaths2}; do
+    if echo ${filepaths1} | grep ${path} &> /dev/null; then
+        continue
+    fi
+    prefix=${path:13:2}
+    rest=${path:16}
+    full=${prefix}${rest}
+    mdprint git cat-file -t ${full}
+    mdprint git cat-file -p ${full}
+done
+
+exit
+
+# Look at the new HEAD
+mdprint git cat-file -p HEAD
 
 # Let's inspect the tree
 tree=$(git cat-file -p HEAD | grep ^tree | cut -d' ' -f2)

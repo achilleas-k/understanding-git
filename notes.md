@@ -85,9 +85,9 @@ We insert objects into the database, Git gives us a key (SHA-1 hash) of the obje
 
 ## Main Git objects
 
-- Blob: The contents of a file.
-- Tree: The equivalent of a directory.
-- Commit: A single snapshot of the repository.
+- Blob: The contents of a file
+- Tree: The equivalent of a directory
+- Commit: A single snapshot of the repository
 
 ---
 
@@ -96,9 +96,65 @@ We insert objects into the database, Git gives us a key (SHA-1 hash) of the obje
 
 ---
 
-The Git object hierarchy
+Let's start a Git repository from scratch. We'll make a couple of snapshots (commits) and drill down into each object to start building our understanding of the whole system.
 
+We initialise a directory with the simple `git init` command. This just sets up the current directory we're working in as a Git repository.
 
+Everything related to Git is stored under the `.git` directory, which resides under the directory where we ran `git init`. All the Git objects are stored in the `.git/objects` subdirectory. Since this is a fresh new repository, the object store is empty.
+
+---
+
+Let's create a README and add the first commit. To create a first commit, we first need to *add* the changes we want to record into the *commit*. Remember, a commit is a snapshot of the repository, but we need to tell Git which files and file changes we want to add to the snapshot. We *add* the README to Git using the `add` command.  We create a *commit* using the `commit` command. The `-m` option in the co`commit` command lets us add a message to describe the snapshot. If we didn't add this, Git would open a text editor to ask us for a message.
+
+Nb: Empty commit messages are allowed, but they're generally frowned upon so by default Git wont let you create a commit without a message.
+
+---
+
+Checking the object store again, we see that Git has created some objects.
+
+Git stores its contents compressed, so we can't just open the files to see inside, but we can start using some *plumbing* commands to inspect Git's internals.
+
+---
+
+Our first plumbing command
+- `cat-file`: shows information about or content of a Git object
+    - `-t`: print type of object
+    - `-p`: pretty-print contents of object
+
+`pretty-print` is a commonly used term for printing data in a human-readable format. It usually implies that data will be printed indented or coloured in ways that make it easier to read but wouldn't be good to work with programmatically.
+
+Running both `git cat-file -t` and `git cat-file -p` on each of the objects in our store will show us their type and contents.
+
+```bash
+$ git cat-file -t 76c979922c8d1938330c4f659806bab23109def8
+commit
+```
+```bash
+$ git cat-file -p 76c979922c8d1938330c4f659806bab23109def8
+tree dcd0c23a90b9a55df7caa0c5c182254ace2e0be4
+author Achilleas Koutsou <achilleas.k@gmail.com> 1542117871 +0100
+committer Achilleas Koutsou <achilleas.k@gmail.com> 1542117871 +0100
+
+Initial commit: Add README
+```
+
+```bash
+$ git cat-file -t dcd0c23a90b9a55df7caa0c5c182254ace2e0be4
+tree
+```
+```bash
+$ git cat-file -p dcd0c23a90b9a55df7caa0c5c182254ace2e0be4
+100644 blob 32c65e86d72d50be78c536f79d8036604eb713b1    README.md
+```
+
+```bash
+$ git cat-file -t 32c65e86d72d50be78c536f79d8036604eb713b1
+blob
+```
+```bash
+$ git cat-file -p 32c65e86d72d50be78c536f79d8036604eb713b1
+# Understanding Git
+```
 ---
 
 # Part N
