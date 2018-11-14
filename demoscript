@@ -150,11 +150,14 @@ replace "::catpheada::" "${catpheada}"
 rpheadtld1a=$(mdprint git rev-parse HEAD~1)
 replace "::rpheadtld1a::" "${rpheadtld1a}"
 
-mdprint git cat-file -p master~1:
-mdprint git rev-parse master~1:README.md
+catpmastertld1clna=$(mdprint git cat-file -p master~1:)
+replace "::catpmastertld1clna::" "${catpmastertld1clna}"
+catpmastertld1rdma=$(mdprint git rev-parse master~1:README.md)
+replace "::catpmastertld1rdma::" "${catpmastertld1rdma}"
 
 mdprint git branch demo-code
-mdprint git rev-parse master demo-code HEAD
+rpmasterdemohead=$(mdprint git rev-parse master demo-code HEAD)
+replace "::rpmasterdemohead::" "${rpmasterdemohead}"
 
 mdprint git checkout demo-code
 
@@ -163,14 +166,20 @@ mdprint 'chmod +x demoscript'
 mdprint 'git add demoscript'
 mdprint 'git commit -m "Add demoscript"'
 
-mdprint git rev-parse master
-mdprint git rev-parse demo-code
-mdprint git rev-parse HEAD
+rpmasterb=$(mdprint git rev-parse master)
+replace "::rpmasterb::" "${rpmasterb}"
+rpdemob=$(mdprint git rev-parse demo-code)
+replace "::rpdemob::" "${rpdemob}"
+rpheadb=$(mdprint git rev-parse HEAD)
+replace "::rpheadb::" "${rpheadb}"
 
 mdprint git checkout master
-mdprint git rev-parse master
-mdprint git rev-parse demo-code
-mdprint git rev-parse HEAD
+rpmasterc=$(mdprint git rev-parse master)
+replace "::rpmasterc::" "${rpmasterc}"
+rpdemoc=$(mdprint git rev-parse demo-code)
+replace "::rpdemoc::" "${rpdemoc}"
+rpheadc=$(mdprint git rev-parse HEAD)
+replace "::rpheadc::" "${rpheadc}"
 
 mdprint ls
 
@@ -178,7 +187,8 @@ mdprint 'echo -e "\n\n# Part 2\n## What is Git?" >> slides.md'
 mdprint git add slides.md
 mdprint 'git commit -m "Add third presentation slide"'
 
-mdprint git rev-parse master~1 demo-code~1
+rpmasterdemod=$(mdprint git rev-parse master~1 demo-code~1)
+replace "::rpmasterdemod::" "${rpmasterdemod}"
 
 
 

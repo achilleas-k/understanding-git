@@ -569,15 +569,8 @@ A commit holds a reference to its parent. We can easily get a reference to this 
 
 ---
 
-```bash
-$ git cat-file -p master~1:
-100644 blob 6aeb411c21381069e37981f0e97e1b6bd26f9ff5	README.md
-100644 blob 946086806911f33c726b8e4088bb3ea5a28ac7a2	slides.md
-```
-```bash
-$ git rev-parse master~1:README.md
-6aeb411c21381069e37981f0e97e1b6bd26f9ff5
-```
+::catpmastertld1clna::
+::catpmastertld1rdma::
 
 Note:
 Appending colon to a ref refers to a tree or blob in that revision/commit.
@@ -697,12 +690,7 @@ We now have three symbolic names that all refer to `c2`. HEAD is the currently c
 
 ---
 
-```bash
-$ git rev-parse master demo-code HEAD
-0488c139d44019bc518d5dd8e1864dd31bb19aa1
-0488c139d44019bc518d5dd8e1864dd31bb19aa1
-0488c139d44019bc518d5dd8e1864dd31bb19aa1
-```
+::rpmasterdemohead::
 
 Note:
 If we inspect all three references using rev-parse, we can verify that they are indeed the same commit.
@@ -755,18 +743,9 @@ With the new commit, we've created a new snapshot on the active branch `demo-cod
 
 ---
 
-```bash
-$ git rev-parse master
-d87d662d1ea13098debd6d1684a1b2745465d623
-```
-```bash
-$ git rev-parse demo-code
-3652cf7404b11479fb5f94df0b234b949001369c
-```
-```bash
-$ git rev-parse HEAD
-3652cf7404b11479fb5f94df0b234b949001369c
-```
+::rpmasterb::
+::rpdemob::
+::rpheadb::
 
 Note:
 Let's again verify using rev-parse to see our object hashes
@@ -784,18 +763,9 @@ Move `HEAD` to point to `master`
 ```bash
 $ git checkout master
 ```
-```bash
-$ git rev-parse master
-e20487a13b849606cdd5a1e55a7de913326bd8ba
-```
-```bash
-$ git rev-parse demo-code
-5d5cc9b75aa202f859f916ecc113e9917f212607
-```
-```bash
-$ git rev-parse HEAD
-e20487a13b849606cdd5a1e55a7de913326bd8ba
-```
+::rpmasterc::
+::rpdemoc::
+::rpheadc::
 
 ---
 ```bash
@@ -872,11 +842,7 @@ It should also be clearer now why branches are called branches.
 
 ---
 
-```bash
-$ git rev-parse master~1 demo-code~1
-0b7bfa715f8f2db121acec9c1e4f826edeb68529
-0b7bfa715f8f2db121acec9c1e4f826edeb68529
-```
+::rpmasterdemod::
 
 Note:
 Let's verify our diagram
