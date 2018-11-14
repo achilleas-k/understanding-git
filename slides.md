@@ -294,14 +294,7 @@ Note:
 Let's create a second commit and run through our inspection process again.
 
 ---
-```bash
-.git/objects/f1/5a0bca73aef6fa1abac7e574b8143d4164889e
-.git/objects/38/781ad1a6eb9cd94c0db2bffabe71a9fc7084a1
-.git/objects/94/6086806911f33c726b8e4088bb3ea5a28ac7a2
-.git/objects/eb/4863188fedc82c6b3329a5b7955e0068be6d13
-.git/objects/dc/d0c23a90b9a55df7caa0c5c182254ace2e0be4
-.git/objects/32/c65e86d72d50be78c536f79d8036604eb713b1
-```
+::secondobjectstore::
 
 3 new objects
 
@@ -312,19 +305,8 @@ Let's have a look at the new files.
 
 ---
 
-```bash
-$ git cat-file -t 3730b6b0b056419d7bf73ecc1228e340958a0960
-commit
-```
-```bash
-$ git cat-file -p 3730b6b0b056419d7bf73ecc1228e340958a0960
-tree 38781ad1a6eb9cd94c0db2bffabe71a9fc7084a1
-parent f5c1d92ed327382286b4ebe498a15b32211f99b8
-author Achilleas Koutsou <ak@example.com> 1542124625 +0100
-committer Achilleas Koutsou <ak@example.com> 1542124625 +0100
-
-Add first presentation slide
-```
+::cattcommit2::
+::catpcommit2::
 
 Note:
 Just like last time, the first object is a `commit`. It's our new commit, where we added the presentation slide. Notice anything different?
@@ -335,15 +317,8 @@ If you look at the hash, it's the key of the first (initial) commit. Let's look 
 
 ---
 
-```bash
-$ git cat-file -t 38781ad1a6eb9cd94c0db2bffabe71a9fc7084a1
-tree
-```
-```bash
-$ git cat-file -p 38781ad1a6eb9cd94c0db2bffabe71a9fc7084a1
-100644 blob 32c65e86d72d50be78c536f79d8036604eb713b1    README.md
-100644 blob 946086806911f33c726b8e4088bb3ea5a28ac7a2    slides.md
-```
+::catttree2::
+::catptree2::
 
 Note:
 Again, the second object is a `tree`. The tree now has two entries. The README.md from before and the slides.md we just added.
@@ -352,18 +327,8 @@ Note that the key for the README.md file is the same as before. Since the file w
 
 ---
 
-```bash
-$ git cat-file -t 946086806911f33c726b8e4088bb3ea5a28ac7a2
-blob
-```
-```bash
-$ git cat-file -p 946086806911f33c726b8e4088bb3ea5a28ac7a2
-# Understanding Git
-
-> Achilleas Koutsou
-
-2018-11-14
-```
+::cattblob2::
+::catpblob2::
 
 Note:
 The third new object is the contents of slides.md, as expected.

@@ -73,7 +73,8 @@ mdprint 'git commit -m "Add first presentation slide"'
 # Check the object store again
 mdprint tree -F .git/objects
 
-mdprint find .git/objects -type f
+secondobjectstore=$(mdprint find .git/objects -type f)
+replace "::secondobjectstore::" "${secondobjectstore}"
 
 filepaths2=$(find .git/objects -type f)
 
