@@ -258,6 +258,26 @@ replace "::gitcatsrdmb::" "${gitcatsrdmb}"
 gitcatprdmb=$(mdprint git cat-file -p HEAD~1:README.md)
 replace "::gitcatprdmb::" "${gitcatprdmb}"
 
+ospregc=$(mdprint find .git/objects -type f)
+replace "::ospregc::" "${ospregc}"
+
+osdupre=$(mdprint du -s .git/objects)
+replace "::osdupre::" "${osdupre}"
+
+gitgc=$(mdprint git gc)
+replace "::gitgc::" "${gitgc}"
+
+ospostgc=$(mdprint find .git/objects -type f)
+replace "::ospostgc::" "${ospostgc}"
+
+osdupost=$(mdprint du -s .git/objects)
+replace "::osdupost::" "${osdupost}"
+
+apack=$(find .git/objects -type f -iname "*.pack" | head -n1)
+verifypack=$(mdprint git verify-pack -v ${apack})
+
+replace "::verifypack::" "${verifypack}"
+
 exit
 
 # ---------------

@@ -1041,4 +1041,37 @@ We've seen so far that git keeps snapshots of the tree every time we commit. If 
 ::gitcatsrdmb::
 ::gitcatprdmb::
 
+Note:
+The two versions of README are the full file. We can even see it from the size. This can become wasteful when projects grow to thousands lines of code. It probably wont create a storage problem, but it's certainly inefficient.
+
 ---
+
+`git gc`
+
+- Cleanup unnecessary files and optimize the local repository
+
+---
+
+::ospregc::
+
+::osdupre::
+
+Note:
+Let's have a look at the object store as it is now
+
+---
+
+::gitgc::
+::ospostgc::
+::osdupost::
+
+Note:
+Run the gc command (garbage collector) to optimise the storage and check the store again
+
+---
+
+::verifypack::
+
+---
+
+This is done automatically on occasion, so you don't need to worry about running `gc` manually.
