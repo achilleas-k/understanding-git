@@ -386,17 +386,7 @@ Let's do one more commit. This time, we'll modify an existing file. We'll add a 
 
 ---
 
-```bash
-.git/objects/12/4e8d9f4e78f2fb2e478bbfd57b29c23f04e854
-.git/objects/37/1aab1c5585c1b426385128946f772d409a26f8
-.git/objects/f5/a1828f86e3aeb2aad46ebb7e69144179849ae4
-.git/objects/40/641b176048c07e570f72fae8e0bd5f9d1c4cbf
-.git/objects/38/781ad1a6eb9cd94c0db2bffabe71a9fc7084a1
-.git/objects/94/6086806911f33c726b8e4088bb3ea5a28ac7a2
-.git/objects/eb/8152b977c2bf99528d40efe2e3094ca2b2524e
-.git/objects/dc/d0c23a90b9a55df7caa0c5c182254ace2e0be4
-.git/objects/32/c65e86d72d50be78c536f79d8036604eb713b1
-```
+::thirdobjectstore::
 
 3 new objects
 
@@ -405,35 +395,16 @@ Again, three new objects. I hope this isn't a surprise by now.
 
 ---
 
-```bash
-$ git cat-file -t f0d367ac211d2aeaaca5acb82ca5408a698284a5
-commit
-```
-
-```bash
-$ git cat-file -p f0d367ac211d2aeaaca5acb82ca5408a698284a5
-tree 5e605f1c012c4da9064a8d7527eed85f4c6c1093
-parent ee7c8085bac4e4cfc5a239a8ab1a0cade30ef780
-author Achilleas Koutsou <ak@example.com> 1542132946 +0100
-committer Achilleas Koutsou <ak@example.com> 1542132946 +0100
-
-Add second presentation slide
-```
+::cattcommit3::
+::catpcommit3::
 
 Note:
 The new commit
 
 ---
 
-```bash
-$ git cat-file -t 5e605f1c012c4da9064a8d7527eed85f4c6c1093
-tree
-```
-```bash
-$ git cat-file -p 5e605f1c012c4da9064a8d7527eed85f4c6c1093
-100644 blob 32c65e86d72d50be78c536f79d8036604eb713b1	README.md
-100644 blob e0097861ecddb9721b29d30e6c08838008fb4d0f	slides.md
-```
+::catttree3::
+::catptree3::
 
 Note:
 The new tree.
@@ -444,21 +415,8 @@ As far as Git is concerned, this is a completely new object. The fact that there
 
 ---
 
-```bash
-$ git cat-file -t e0097861ecddb9721b29d30e6c08838008fb4d0f
-blob
-```
-```bash
-$ git cat-file -p e0097861ecddb9721b29d30e6c08838008fb4d0f
-# Understanding Git
-
-> Achilleas Koutsou
-
-2018-11-14
-
-# Part 1
-## Porcelain and Plumbing
-```
+::cattblob3::
+::catpblob3::
 
 Note:
 So if we check the contents of the new hash, we get the new file in its entirety.
@@ -466,14 +424,7 @@ So if we check the contents of the new hash, we get the new file in its entirety
 ---
 
 We can still retrieve the first version of the file
-```bash
-$ git cat-file -p 946086806911f33c726b8e4088bb3ea5a28ac7a2
-# Understanding Git
-
-> Achilleas Koutsou
-
-2018-11-14
-```
+::catpblob2::
 
 Note:
 The original version of the file is of course still available using its hash. The object is still available in the object store, it just isn't part of the working directory. In Git terms: the original blob is not referenced by the tree of the current commit.

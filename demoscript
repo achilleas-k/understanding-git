@@ -105,9 +105,9 @@ mdprint git add slides.md
 mdprint 'git commit -m "Add second presentation slide"'
 
 # Check the object store again
-mdprint tree -F .git/objects
-mdprint find .git/objects -type f
 
+thirdobjectstore=$(mdprint find .git/objects -type f)
+replace "::thirdobjectstore::" "${thirdobjectstore}"
 filepaths3=$(find .git/objects -type f)
 
 # git cat-file on each *new* object
@@ -120,6 +120,11 @@ for path in ${filepaths3}; do
     full=${prefix}${rest}
     mdprint git cat-file -t ${full}
     mdprint git cat-file -p ${full}
+    type=$(git cat-file -t ${full})
+    cattype=$(mdprint git cat-file -t ${full})
+    catprint=$(mdprint git cat-file -p ${full})
+    replace "::catt${type}3::" "${cattype}"
+    replace "::catp${type}3::" "${catprint}"
 done
 
 mdprint git cat-file -p ${slidesfirstver}
