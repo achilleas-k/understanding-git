@@ -11,7 +11,6 @@ with open("${scriptloc}/slides.md") as slides:
     content = slides.read()
 
 string = """${string}"""
-print(r"Replacing ${keyword} with " + string)
 with open("${scriptloc}/slides.md", "w") as slides:
     slides.write(content.replace(r"${keyword}", string))
 END
@@ -131,7 +130,8 @@ mdprint git cat-file -p ${slidesfirstver}
 
 mdprint git cat-file -t HEAD
 mdprint git cat-file -t master
-mdprint git cat-file -p master
+catpmaster=$(mdprint git cat-file -p master)
+replace "::catpmaster::" "${catpmaster}"
 
 mdprint git cat-file -t master~1
 mdprint git cat-file -t master~1:
@@ -140,11 +140,15 @@ mdprint git cat-file -p master~1:slides.md
 mdprint git cat-file -p master~1:README.md
 mdprint git cat-file -p master:README.md
 
-mdprint git rev-parse HEAD
-mdprint git rev-parse master
+rpheada=$(mdprint git rev-parse HEAD)
+replace "::rpheada::" "${rpheada}"
+rpmastera=$(mdprint git rev-parse master)
+replace "::rpmastera::" "${rpmastera}"
 
-mdprint git cat-file -p HEAD
-mdprint git rev-parse HEAD~1
+catpheada=$(mdprint git cat-file -p HEAD)
+replace "::catpheada::" "${catpheada}"
+rpheadtld1a=$(mdprint git rev-parse HEAD~1)
+replace "::rpheadtld1a::" "${rpheadtld1a}"
 
 mdprint git cat-file -p master~1:
 mdprint git rev-parse master~1:README.md

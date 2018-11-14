@@ -490,15 +490,7 @@ commit
 $ git cat-file -t master
 commit
 ```
-```bash
-$ git cat-file -p master
-tree bc248760039ec1aaed7d70d3675a4ad990b6cbad
-parent ec4aafb724e8df9431967825cf0d8aeb16618839
-author Achilleas Koutsou <ak@example.com> 1542150852 +0100
-committer Achilleas Koutsou <ak@example.com> 1542150852 +0100
-
-Add second presentation slide
-```
+::catpmaster::
 
 Note:
 Some examples
@@ -556,37 +548,17 @@ We can use it for just one of its features: getting the object hash from a ref
 
 ---
 
-```bash
-$ git rev-parse HEAD
-10f21b8ddd8fa6ea61fc1e3bb72ae448c5129515
-```
+::rpheada::
 
 Translates symbolic name `HEAD` to the `SHA-1` key
 
 ---
 
-```bash
-$ git rev-parse HEAD
-129245abafe22dc446e0fc99a8aa00c1aafb1637
-```
-```bash
-$ git rev-parse master
-129245abafe22dc446e0fc99a8aa00c1aafb1637
-```
-```bash
-$ git cat-file -p HEAD
-tree 3a636d581e8d0ea6394d38ec214037000f454c4f
-parent d622069ae0d126de06a3a7add6eeed0cc02d3a8b
-author Achilleas Koutsou <ak@example.com> 1542152437 +0100
-committer Achilleas Koutsou <ak@example.com> 1542152437 +0100
+::rpheada::
+::rpmastera::
+::catpheada::
 
-Add second presentation slide
-```
-
-```bash
-$ git rev-parse HEAD~1
-d622069ae0d126de06a3a7add6eeed0cc02d3a8b
-```
+::rpheadtld1a::
 
 Note:
 Let's use `rev-parse` for a quick revision
