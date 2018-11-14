@@ -27,7 +27,7 @@ git config --local user.email "ak@example.com"
 mdprint tree -F .git/objects
 
 # Add a README and commit
-mdprint 'echo "# Understanding Git" > README.md'
+mdprint 'echo "# Understanding Git: Presentation slides repository" > README.md'
 mdprint git add README.md
 mdprint 'git commit -m "Initial commit: Add README"'
 
@@ -103,5 +103,27 @@ for path in ${filepaths3}; do
 done
 
 mdprint git cat-file -p ${slidesfirstver}
+
+mdprint git cat-file -t HEAD
+mdprint git cat-file -t master
+mdprint git cat-file -p master
+
+mdprint git cat-file -t master~1
+mdprint git cat-file -t master~1:
+mdprint git cat-file -p master~1:slides.md
+
+mdprint git cat-file -p master~1:README.md
+mdprint git cat-file -p master:README.md
+
+mdprint git rev-parse HEAD
+mdprint git rev-parse master
+
+mdprint git cat-file -p HEAD
+mdprint git rev-parse HEAD~1
+
+mdprint git cat-file -p master~1:
+mdprint git rev-parse master~1:README.md
+
+exit
 
 git log --reverse --pretty=format:"Commit: %H%n    Message: %s%n    Parent: %P%n    Tree: %T%n%n"

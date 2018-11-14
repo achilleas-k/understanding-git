@@ -120,7 +120,8 @@ Short hash
 ```
 
 Note:
-A SHA-1 hash looks like a seemingly random sequence of 40 hexadecimal digits [0-9, a-f].
+A SHA-1 hash looks like a *seemingly random* sequence of 40 hexadecimal digits [0-9, a-f]
+(emphasis on *seemingly*)
 
 Git uses these hashes to identify all the objects it uses internally.
 
@@ -158,7 +159,7 @@ Everything related to Git is stored under the `.git` directory, which resides un
 
 Add a readme
 ```bash
-$ echo "# Understanding Git" > README.md
+$ echo "# Understanding Git: Presentation slides repository" > README.md
 ```
 ```bash
 $ git add README.md
@@ -404,10 +405,16 @@ So what we've learned here is that the new commit has a `parent` reference, whic
    - `tree`: A reference to a tree (the top-level directory)
    - Metadata: Author, committer, message, date & time
 
+Note:
+A commit consists of a tree, a reference to a parent commit (unless it's the first commit), and a bunch of metadata. We wont talk much about the metadata since it's not very interesting. It's part of the content of the commit and it's used to compute the hash, but beyond that, it doesn't mean much for the Git internals.
+
 ---
 
 - A tree consists of references to blobs and other trees
 - A blob is simply the contents of a file
+
+Note:
+A tree is like a directory. It just references other trees and blobs. The filesystem names of trees and blobs, in other words, the directory and file names as they appear on the filesystem, are found in the *parent* tree. Filesystems work in very much the same way. Filenames are simply references to blocks on a storage device. The names themselves are part of a directory listing. The top level directory has no name; it's simply the root directory (both in a filesystem and in Git).
 
 ---
 
@@ -485,9 +492,9 @@ $ git cat-file -p 5e605f1c012c4da9064a8d7527eed85f4c6c1093
 Note:
 The new tree.
 
-Here we see something new. The tree appears to be the same as the old one, but the difference is in the key (the hash) of slides.md. It's the same filename, but it has different content, since we added more text to it.
+Here we see something new. At first glance, the tree may appear to be the same as the old one, but the difference is in the key (the hash) of slides.md. It's the same filename, but it has different contents, since we added more text to it.
 
-So now, as far as Git is concerned, this is a completely new object. The fact that there are two entries in two different trees both called slides.md doesn't matter. It's just a symbolic name. The true key, or identifier of the content of the file is the hash.
+As far as Git is concerned, this is a completely new object. The fact that there are two entries in two different trees both called slides.md doesn't matter. It's just a symbolic name. The true key, or identifier of the content of the file is the hash.
 
 ---
 
@@ -527,14 +534,126 @@ The original version of the file is of course still available using its hash. Th
 
 ---
 
+# Part 3.1
+## Hashes are not fit for human consumption
+
 ---
 
-`rev-parse`
-  - A plumbing command used internally for parsing flags and revision arguments
+So far, we've been inspecting objects using their hashes. Nice for learning, but it's no way to live.
 
-`HEAD`
-  - The head (tip) of the current branch
-  - Points to the revision in the working directory (before any uncommitted changes)
+Note:
+So far we've been using `cat-file` to check on objects in the data store. This is great for poking around Git's internals, since it brings us down to the core of the object store, but in normal usage, we rarely (if ever) use hashes directly.
+
+---
+
+Git provides symbolic names and shorthand for referencing objects
+
+---
+
+- Symbolic names: `refs`
+  - `HEAD`: The current commit being worked on
+  - branches (e.g., `master`): The most recent commit (head) of a given branch
+  - tags (e.g., `v1.0`): A specific, named commit
+
+Note:
+`HEAD`: Refers to the currently *checked out* commit. *Checkout* is a Git (and other SCM) term and refers to changing the current working tree to a specific commit. A *checked out* revision refers to the commit currently being worked on.
+
+Branches: By default, when we run `git init`, a reference is created called `master`. Every time a new commit is created, the `master` is updated to point to the new commit. We refer to this as a branch. A branch is simply a sequence of commits, starting from a HEAD commit (the latest in the branch) and going back through the parent references until the initial commit. In a bit, we'll see how other branches can be created and how that works. The name `master` holds no special meaning other than it being the conventional default.
+
+Tags: At any time, we can tag a specific commit and give it a name. Much like a branch, it's a reference that points to a commit along with its implied history. The difference is that tags are never automatically updated to point to newer commits and in fact aren't meant to be changed.
+
+---
+
+- Referencing ancestors to a commit
+  - `<ref>~<n>` (e.g., `HEAD~3`): The `<n>th` ancestor of the named reference (e.g., the third ancestor of `HEAD`)
+
+Note:
+The tilde can be used to refer to *ancestors* of a commit (parents of parents, up the sequence of revisions).
+
+---
+
+- Tree and blob references
+  - `<ref>:<path>` (e.g., `master:README.md`)
+  - Can be combined with above to refer to objects from other revisions
+    - `master~2:slides.md`
+  - The root tree of a commit can be referenced by omitting the `<path>`
+    - `master:`
+
+Note:
+If we append a colon to a ref, we start referencing the other objects, trees and blobs. We can reference them by their directory or filename directly. This is unambiguous since it refers to the version of a file in a specific commit.
+
+These can all be combined arbitrarily. We could even use the hashes for any of the objects, the notation would be the same.
+
+---
+```bash
+$ git cat-file -t HEAD
+commit
+```
+```bash
+$ git cat-file -t master
+commit
+```
+```bash
+$ git cat-file -p master
+tree bc248760039ec1aaed7d70d3675a4ad990b6cbad
+parent ec4aafb724e8df9431967825cf0d8aeb16618839
+author Achilleas Koutsou <ak@example.com> 1542150852 +0100
+committer Achilleas Koutsou <ak@example.com> 1542150852 +0100
+
+Add second presentation slide
+```
+
+Note:
+Some examples
+
+Head and master are both commits. In fact they're currently both the same commit, the most recent one, where we added the second presentation slide.
+
+---
+```bash
+$ git cat-file -t master~1
+commit
+```
+```bash
+$ git cat-file -t master~1:
+tree
+```
+```bash
+$ git cat-file -p master~1:slides.md
+# Understanding Git
+
+> Achilleas Koutsou
+
+2018-11-14
+```
+
+Note:
+`master~1` is also a commit. If we add a colon to the end, it becomes a reference to the root tree.
+
+`master~1:slides.md` refers to the file names slides.md in the parent commit of master, which is the previous version of slides.md, before we added the second slide.
+
+---
+
+```bash
+$ git cat-file -p HEAD~1:README.md
+# Understanding Git: Presentation slides repository
+```
+```bash
+$ git cat-file -p HEAD:README.md
+# Understanding Git: Presentation slides repository
+```
+
+Note:
+Since README hasn't changed (since the first commit), both the current and previous revisions show the same content
+
+---
+
+- New plumbing command: `rev-parse`
+  - Used internally for parsing flags and refs
+
+Note:
+`rev-parse` is a pretty powerful plumbing command. Internally, it's used to parse arguments and references.
+
+We can use it for just one of its features: getting the object hash from a ref
 
 ---
 
@@ -547,54 +666,108 @@ Translates symbolic name `HEAD` to the `SHA-1` key
 
 ---
 
-`cat-file`
-
----
-
-What *type* (`-t`) of object is `HEAD`?
-
 ```bash
-$ git cat-file -t HEAD
-commit
+$ git rev-parse HEAD
+129245abafe22dc446e0fc99a8aa00c1aafb1637
 ```
-
----
-
-Show me (`-p` print) the *contents* of `HEAD`
-
+```bash
+$ git rev-parse master
+129245abafe22dc446e0fc99a8aa00c1aafb1637
+```
 ```bash
 $ git cat-file -p HEAD
-tree dcd0c23a90b9a55df7caa0c5c182254ace2e0be4
-author Achilleas Koutsou <achilleas.k@gmail.com> 1542042136 +0100
-committer Achilleas Koutsou <achilleas.k@gmail.com> 1542042136 +0100
+tree 3a636d581e8d0ea6394d38ec214037000f454c4f
+parent d622069ae0d126de06a3a7add6eeed0cc02d3a8b
+author Achilleas Koutsou <ak@example.com> 1542152437 +0100
+committer Achilleas Koutsou <ak@example.com> 1542152437 +0100
 
-Initial commit: Add README
+Add second presentation slide
 ```
 
----
+```bash
+$ git rev-parse HEAD~1
+d622069ae0d126de06a3a7add6eeed0cc02d3a8b
+```
 
----
+Note:
+Let's use `rev-parse` for a quick revision
 
-Our current `HEAD` is the first commit; it doesn't have a parent.
+HEAD and master (currently) refer to the same revision. The latest commit we made.
+
+A commit holds a reference to its parent. We can easily get a reference to this parent with the `~1` shorthand.
 
 ---
 
 ```bash
-$ git cat-file -t dcd0c23a90b9a55df7caa0c5c182254ace2e0be4
-tree
+$ git cat-file -p master~1:
+100644 blob 6aeb411c21381069e37981f0e97e1b6bd26f9ff5	README.md
+100644 blob 946086806911f33c726b8e4088bb3ea5a28ac7a2	slides.md
 ```
 ```bash
-$ git cat-file -p dcd0c23a90b9a55df7caa0c5c182254ace2e0be4
-100644 blob 32c65e86d72d50be78c536f79d8036604eb713b1	README.md
+$ git rev-parse master~1:README.md
+6aeb411c21381069e37981f0e97e1b6bd26f9ff5
 ```
+
+Note:
+Appending colon to a ref refers to a tree or blob in that revision/commit.
+
+We can also rev-parse references to blobs or trees to get their hash.
+
+---
+
+The current state of our repository
+
+```bash
+      .----------.      .----------.      .----------.
+      | c0       | <--- | c1       | <--- | c2       |
+      |----------|      |----------|      |----------|
+      |          |      | par:  c0 |      | par:  c1 |
+      | tree: t0 |      | tree: t1 |      | tree: t2 |
+      ·----------·      ·----------·      ·----------·
 ```
-$ git cat-file -t 32c65e86d72d50be78c536f79d8036604eb713b1
-blob
-```
-```
-$ git cat-file -p 32c65e86d72d50be78c536f79d8036604eb713b1
-# Understanding Git
-```
+
+Quiz time! What is the output of:
+- `git rev-parse c1:`
+- `git cat-file -t c2:t1`
+- `git rev-parse c2~2`
+
+Note:
+I hope you enjoy ASCII art
+
+---
+
+- `git rev-parse c1:`
+  - A: t1
+- `git cat-file -t c2:t1`
+  - A: tree
+- `git rev-parse c2~2`
+  - A: c0
+
+---
+
+Commits point to a parent
+
+Commits have a sequence, an order
+
+Note:
+Since each commit points to its parent, commits have an order, a sequence. The reference order goes from most recent to the initial commit.
+
+---
+
+But a repository's commits don't form a chain, they form a graph
+
+Note:
+But commits in Git don't just specify a chain. In fact they're a graph.
+
+---
+
+# Part 3.2
+## Branches
+
+---
+
+# Part 3.2
+## Detour: Packs and Deltas
 
 ---
 
