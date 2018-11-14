@@ -65,14 +65,6 @@ for path in ${filepaths1}; do
     replace "::catp${type}1::" "${catprint}"
 done
 
-# These objects are compressed so we can't read them directly
-head=$(git rev-parse HEAD)
-
-cattcommit1=$(mdprint git cat-file -t ${head})
-replace "::cattcommit1::" "${cattcommit1}"
-catpcommit1=$(mdprint git cat-file -p ${head})
-replace "::catpcommit1::" "${catpcommit1}"
-
 # Let's make one more commit so we can see the parent
 mdprint 'echo -e "# Understanding Git\n\n> Achilleas Koutsou\n\n2018-11-14" > slides.md'
 mdprint git add slides.md
@@ -95,6 +87,11 @@ for path in ${filepaths2}; do
     full=${prefix}${rest}
     mdprint git cat-file -t ${full}
     mdprint git cat-file -p ${full}
+    type=$(git cat-file -t ${full})
+    cattype=$(mdprint git cat-file -t ${full})
+    catprint=$(mdprint git cat-file -p ${full})
+    replace "::catt${type}2::" "${cattype}"
+    replace "::catp${type}2::" "${catprint}"
     if git cat-file -p ${full} | grep "Understanding Git" &> /dev/null; then
         slidesfirstver=${full}
     fi

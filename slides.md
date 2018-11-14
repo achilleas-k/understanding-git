@@ -247,14 +247,8 @@ Finally, the third object we'll inspect again appears here: It's a reference to 
 
 ---
 
-```bash
-$ git cat-file -t 32c65e86d72d50be78c536f79d8036604eb713b1
-blob
-```
-```bash
-$ git cat-file -p 32c65e86d72d50be78c536f79d8036604eb713b1
-# Understanding Git
-```
+::cattblob1::
+::catpblob1::
 
 Note:
 Git uses the term `blob` to refer to file contents. Note that the file name `README.md` doesn't appear anywhere in the blob, only its contents. At the blob level, Git doesn't care about the name of the file. That information is stored in the tree which we saw earlier. The entry in the `tree` object is linked to the `blob` object using the key (hash).
