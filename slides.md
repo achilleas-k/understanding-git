@@ -565,7 +565,7 @@ Tags: At any time, we can tag a specific commit and give it a name. Much like a 
 ---
 
 - Referencing ancestors to a commit
-  - `<ref>~<n>` (e.g., `HEAD~3`): The `<n>th` ancestor of the named reference (e.g., the third ancestor of `HEAD`)
+  - `<ref>~<n>`: The `<n>th` ancestor of the named reference (e.g., `HEAD~3` the third ancestor of `HEAD`)
 
 Note:
 The tilde can be used to refer to *ancestors* of a commit (parents of parents, up the sequence of revisions).
@@ -645,6 +645,8 @@ $ git cat-file -p HEAD:README.md
 Note:
 Since README hasn't changed (since the first commit), both the current and previous revisions show the same content
 
+Keep in mind that we're not asking for a previous version of a file. We're asking for the version of a file that was part of a given snapshot (commit).
+
 ---
 
 - New plumbing command: `rev-parse`
@@ -718,30 +720,55 @@ We can also rev-parse references to blobs or trees to get their hash.
 The current state of our repository
 
 ```bash
-      .----------.      .----------.      .----------.
-      | c0       | <--- | c1       | <--- | c2       |
-      |----------|      |----------|      |----------|
-      |          |      | par:  c0 |      | par:  c1 |
-      | tree: t0 |      | tree: t1 |      | tree: t2 |
-      ·----------·      ·----------·      ·----------·
+          .----------.      .----------.      .----------.
+          | c0       | <--- | c1       | <--- | c2       |
+          |----------|      |----------|      |----------|
+          |          |      | par:  c0 |      | par:  c1 |
+          | tree: t0 |      | tree: t1 |      | tree: t2 |
+          ·----------·      ·----------·      ·----------·
 ```
 
 Quiz time! What is the output of:
-- `git rev-parse c1:`
-- `git cat-file -t c2:t1`
-- `git rev-parse c2~2`
+1. `git rev-parse c1:`
+2. `git rev-parse c2~2`
+3. `git cat-file -t c2:`
 
 Note:
 I hope you enjoy ASCII art
 
+This is a representation of the current state of our repository. Let's pretend c0 - c2 are hashes for commits and t0 - t2 are hashes for trees.
+
+See if you can predict the output of the tree commands.
+
 ---
 
-- `git rev-parse c1:`
+1. `git rev-parse c1:`
   - A: t1
-- `git cat-file -t c2:t1`
-  - A: tree
-- `git rev-parse c2~2`
+2. `git rev-parse c2~2`
   - A: c0
+3. `git cat-file -t c2~1:`
+  - A: tree
+
+Note:
+`c1:` is the root tree of the second commit, `t1`
+`c2~2` is the second ancestor (parent of parent) of `c2`, `c0`
+`c2~1:` asks for the type of the root tree of the parent of `c2`, which is a tree
+
+---
+
+Trees and blobs
+
+```bash
+   .----------------.    .----------------.    .----------------.
+   | t0             |    | t1             |    | t2             |
+   |----------------|    |----------------|    |----------------|
+   | README.md: b0  |    | README.md: b0  |    | README.md: b0  |
+   |                |    | slides.md: b1  |    | slides.md: b2  |
+   ·----------------·    ·----------------·    ·----------------·
+```
+
+Note:
+An illustration of what our trees look like so far. Again, let's pretend that b0 - b2 are hashes for blobs. Note that README.md always points to the same object, b0.
 
 ---
 
@@ -763,6 +790,231 @@ But commits in Git don't just specify a chain. In fact they're a graph.
 
 # Part 3.2
 ## Branches
+
+Note:
+Branching is an important feature of version control. A history of commits is nice, but simply going back and forward in time isn't that interesting. If you're collaborating on a project, you want multiple people editing things in a repository simultaneously. That's where branches come in.
+
+---
+
+```bash
+$ git branch demo-code
+```
+
+Note:
+In its simple form, `git branch <branchname>` creates a new branch at the current `HEAD`.
+
+Remember, `master` is a branch. It's the default name for the main branch.
+
+After this command, we have a new branch called `demo-code`. We're going to use this branch to write some demonstration code for our talk. We're using a branch because we don't want to affect the main branch until we're happy with the code. We might decide not to keep the code for instance, or maybe we plan to collaborate with someone else and one person will be making the slides while someone else writes the demo.
+
+---
+
+```bash
+          .----------.      .----------.      .----------.
+          | c0       | <--- | c1       | <--- | c2       |
+          |----------|      |----------|      |----------|
+          |          |      | par:  c0 |      | par:  c1 |
+          | tree: t0 |      | tree: t1 |      | tree: t2 |
+          ·----------·      ·----------·      ·----------·
+                                                    |
+                                                    |
+                                                   HEAD
+                                                   master
+                                                   demo-code
+```
+
+Note:
+We now have three symbolic names that all refer to `c2`. HEAD is the currently checked out commit, master is the head of the master branch, and demo-code points to the head of the demo-code branch, which we just created on HEAD.
+
+---
+
+```bash
+$ git rev-parse master demo-code HEAD
+0488c139d44019bc518d5dd8e1864dd31bb19aa1
+0488c139d44019bc518d5dd8e1864dd31bb19aa1
+0488c139d44019bc518d5dd8e1864dd31bb19aa1
+```
+
+Note:
+If we inspect all three references using rev-parse, we can verify that they are indeed the same commit.
+
+---
+
+Switch to the new branch
+```bash
+$ git checkout demo-code
+```
+
+Note:
+When we create a branch, the active branch doesn't change. We need to *checkout* the new branch to make it active.
+
+---
+
+Add the script and commit
+```bash
+$ echo "#!/usr/bin/env bash" > demoscript
+```
+```bash
+$ chmod +x demoscript
+```
+```bash
+$ git add demoscript
+```
+```bash
+$ git commit -m "Add demoscript"
+[demo-code aa59879] Add demoscript
+ 1 file changed, 1 insertion(+)
+ create mode 100755 demoscript
+```
+---
+
+```bash
+.----------.      .----------.      .----------.      .----------.
+| c0       | <--- | c1       | <--- | c2       | <--- | c3       |
+|----------|      |----------|      |----------|      |----------|
+|          |      | par:  c0 |      | par:  c1 |      | par:  c2 |
+| tree: t0 |      | tree: t1 |      | tree: t2 |      | tree: t3 |
+·----------·      ·----------·      ·----------·      ·----------·
+                                          |                 |
+                                          |                 |
+                                         master            HEAD
+                                                           demo-code
+```
+
+Note:
+With the new commit, we've created a new snapshot on the active branch `demo-code`. The head of the branch, as well as the working HEAD have been moved to point to this new commit. `master` is right where we left it, pointing to c2.
+
+---
+
+```bash
+$ git rev-parse master
+d87d662d1ea13098debd6d1684a1b2745465d623
+```
+```bash
+$ git rev-parse demo-code
+3652cf7404b11479fb5f94df0b234b949001369c
+```
+```bash
+$ git rev-parse HEAD
+3652cf7404b11479fb5f94df0b234b949001369c
+```
+
+Note:
+Let's again verify using rev-parse to see our object hashes
+
+---
+
+Where's the graph?
+
+Note:
+Our revision sequence still looks like a flat chain. I promised to show you a graph. So let's check that out.
+
+---
+
+Move `HEAD` to point to `master`
+```bash
+$ git checkout master
+```
+```bash
+$ git rev-parse master
+e20487a13b849606cdd5a1e55a7de913326bd8ba
+```
+```bash
+$ git rev-parse demo-code
+5d5cc9b75aa202f859f916ecc113e9917f212607
+```
+```bash
+$ git rev-parse HEAD
+e20487a13b849606cdd5a1e55a7de913326bd8ba
+```
+
+---
+```bash
+.----------.      .----------.      .----------.      .----------.
+| c0       | <--- | c1       | <--- | c2       | <--- | c3       |
+|----------|      |----------|      |----------|      |----------|
+|          |      | par:  c0 |      | par:  c1 |      | par:  c2 |
+| tree: t0 |      | tree: t1 |      | tree: t2 |      | tree: t3 |
+·----------·      ·----------·      ·----------·      ·----------·
+                                          |                 |
+                                          |                 |
+                                         HEAD              demo-code
+                                         master
+```
+---
+
+```bash
+$ ls
+README.md
+slides.md
+```
+
+Note:
+Checkout doesn't *just* move the HEAD. It's true purpose is *checking out* the tree of a given revision.
+
+So now our working directory is the tree of `master`, `c2`, the commit before we introduced the demo script. `demoscript` is removed, because it doesn't exist in `c2`.
+
+Note that git will never remove a file it doesn't know from your working directory. It wont delete a file that wasn't added and it wont delete or modify a tracked file that has uncommitted changes.
+
+---
+
+```bash
+$ echo -e "\n\n# Part 2\n## What is Git?" >> slides.md
+```
+```bash
+$ git add slides.md
+```
+```bash
+$ git commit -m "Add third presentation slide"
+[master b90a284] Add third presentation slide
+ 1 file changed, 4 insertions(+)
+```
+
+Note:
+We continue working on the presentation. We add a third slide to slides.md and commit.
+
+Let's discuss what the revision history will look like.
+
+---
+
+```bash
+                                             master, HEAD
+                                              |
+                                          .----------.
+     .----------.                         | c4       |
+<--- | c2       | <-----------------------|----------|
+     |----------|     |                   | par:  c2 |
+     | par:  c1 |     |     .----------.  | tree: t4 |
+     | tree: t2 |     `-----| c3       |  ·----------·
+     ·----------·           |----------|
+                            | par:  c2 |
+                            | tree: t3 |
+                            ·----------·
+                                  |
+                                 demo-code
+```
+
+Note:
+Thins are starting to look like a graph now.
+
+The new interesting thing to note now is that c3 and c4 both have the same parent, c2.
+
+It should also be clearer now why branches are called branches.
+
+---
+
+```bash
+$ git rev-parse master~1 demo-code~1
+0b7bfa715f8f2db121acec9c1e4f826edeb68529
+0b7bfa715f8f2db121acec9c1e4f826edeb68529
+```
+
+Note:
+Let's verify our diagram
+
+---
+
+
 
 ---
 

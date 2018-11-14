@@ -124,6 +124,42 @@ mdprint git rev-parse HEAD~1
 mdprint git cat-file -p master~1:
 mdprint git rev-parse master~1:README.md
 
+mdprint git branch demo-code
+mdprint git rev-parse master demo-code HEAD
+
+mdprint git checkout demo-code
+
+mdprint 'echo "#!/usr/bin/env bash" > demoscript'
+mdprint 'chmod +x demoscript'
+mdprint 'git add demoscript'
+mdprint 'git commit -m "Add demoscript"'
+
+mdprint git rev-parse master
+mdprint git rev-parse demo-code
+mdprint git rev-parse HEAD
+
+mdprint git checkout master
+mdprint git rev-parse master
+mdprint git rev-parse demo-code
+mdprint git rev-parse HEAD
+
+mdprint ls
+
+mdprint 'echo -e "\n\n# Part 2\n## What is Git?" >> slides.md'
+mdprint git add slides.md
+mdprint 'git commit -m "Add third presentation slide"'
+
+mdprint git rev-parse master~1 demo-code~1
+
+
+
+
 exit
+
+# ---------------
+
+mdprint git log --graph master demo-code
+
+mdprint 'git log --graph --pretty=format:"Commit: %H%n    Message: %s%n    Parent: %P%n    Tree: %T%n%n" master demo-code'
 
 git log --reverse --pretty=format:"Commit: %H%n    Message: %s%n    Parent: %P%n    Tree: %T%n%n"
