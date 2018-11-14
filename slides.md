@@ -963,30 +963,82 @@ https://www.destroyallsoftware.com/blog/2017/the-biggest-and-weirdest-commits-in
 
 ---
 
-# Part 3.3
-## Detour: Packs and Deltas
+# Part 4
+## Safety first
+
+Note:
+Many times we find ourselves in situations where we want to experiment with some code, or maybe check if we can merge some branches, or we want to go looking for a specific version of a file.
+
+Given everything we learned so far, I want to talk about some ways in which you can avoid losing data, whether that's file contents, or revision history.
 
 ---
 
-# Part N
-## Workflows
+Which branch am I on?
+- `git branch`
+    - With no arguments, shows a list of branches and highlights the current one
+
+Note:
+Always keep in mind which branch you're on
 
 ---
 
-# Add Commit Push
-
-```bash
-$ git add $filename
-$ git commit -m $commitmsg
-$ git push $remote $branch
-```
+::gitbranchf::
 
 ---
 
-# Pull
-## Fetch & Merge
+What does the revision graph look like?
+- `git log --all --graph`
+    - The `--all` flag will show all branches and refs
 
-```bash
-$ git fetch $remote
-$ git merge $remote/$branch
-```
+Note:
+Check what's going on with respect to other branches
+
+---
+
+::gitlogall::
+
+---
+
+Unsaved changes?
+- `git status`
+  - Shows the current branch and files with uncommitted changes
+- `git diff`
+  - Shows the uncommitted changes in patch format (additions and removals of lines)
+
+---
+
+::appendreadme::
+::gitstatusf::
+
+---
+
+::gitdiff::
+
+---
+
+- How your current branch differs from another (e.g., `master`)
+  - `git diff master`: Shows how the content of the files in the current working tree differ from the master tree
+  - `git diff --name-only master`
+
+---
+
+::gitdiffdemo::
+
+---
+
+## Packs and Deltas
+
+Note:
+Remember when we said that git KINDA keeps track of changes?
+
+We've seen so far that git keeps snapshots of the tree every time we commit. If we inspect each version of the README, for instance, we see that each object is the full text of the file.
+
+---
+
+::gitcatsrdma::
+::gitcatprdma::
+
+::gitcatsrdmb::
+::gitcatprdmb::
+
+---

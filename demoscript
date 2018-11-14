@@ -229,6 +229,35 @@ replace "::gitcatpheadtld1clnb::" "${gitcatpheadtldcln1b}"
 gitcatpmerge=$(mdprint 'git cat-file -p HEAD')
 replace "::gitcatpmerge::" "${gitcatpmerge}"
 
+gitbranchf=$(mdprint git branch)
+replace "::gitbranchf::" "${gitbranchf}"
+
+gitlogall=$(mdprint git log --all --graph)
+replace "::gitlogall::" "${gitlogall}"
+
+appendreadme=$(mdprint 'echo "See slides.md for slides" >> README.md')
+replace "::appendreadme::" "${appendreadme}"
+gitstatusf=$(mdprint git status)
+replace "::gitstatusf::" "${gitstatusf}"
+
+gitdiff=$(mdprint git diff)
+replace "::gitdiff::" "${gitdiff}"
+
+gitdiffdemo=$(mdprint git diff demo-code)
+replace "::gitdiffdemo::" "${gitdiffdemo}"
+
+git commit README.md -m "Mention slides in README"
+
+gitcatsrdma=$(mdprint git cat-file -s HEAD:README.md)
+replace "::gitcatsrdma::" "${gitcatsrdma}"
+gitcatprdma=$(mdprint git cat-file -p HEAD:README.md)
+replace "::gitcatprdma::" "${gitcatprdma}"
+
+gitcatsrdmb=$(mdprint git cat-file -s HEAD~1:README.md)
+replace "::gitcatsrdmb::" "${gitcatsrdmb}"
+gitcatprdmb=$(mdprint git cat-file -p HEAD~1:README.md)
+replace "::gitcatprdmb::" "${gitcatprdmb}"
+
 exit
 
 # ---------------
