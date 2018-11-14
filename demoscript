@@ -190,8 +190,14 @@ mdprint 'git commit -m "Add third presentation slide"'
 rpmasterdemod=$(mdprint git rev-parse master~1 demo-code~1)
 replace "::rpmasterdemod::" "${rpmasterdemod}"
 
+gitloga=$(mdprint git log -n 2)
+replace "::gitloga::" "${gitloga}"
 
+gitlogb=$(mdprint 'git log --pretty=format:"Commit: %h | Parent: %p | Tree: %t %n Message: %s%n"')
+replace "::gitlogb::" "${gitlogb}"
 
+gitlogc=$(mdprint 'git log --graph --oneline master demo-code')
+replace "::gitlogc::" "${gitlogc}"
 
 exit
 

@@ -93,6 +93,9 @@ Which of these statements are true?
 # Part 2.5
 ## Hash functions
 
+Note:
+Before we talk more about Git, let me take a minute to talk about hash functions.
+
 ---
 
 What is a hash function?
@@ -834,7 +837,7 @@ Let's discuss what the revision history will look like.
 ```
 
 Note:
-Thins are starting to look like a graph now.
+Things are starting to look like a graph now.
 
 The new interesting thing to note now is that c3 and c4 both have the same parent, c2.
 
@@ -849,11 +852,38 @@ Let's verify our diagram
 
 ---
 
-
+# Part 3.2
+## The Log
 
 ---
 
-# Part 3.2
+`git log` is your tool for exploring the commit history
+
+Note:
+git log is a powerful tool for exploring the commit history. It prints a sequence of commits, by default in reverse chronological order
+
+---
+
+::gitloga::
+
+Note:
+The -n flag limits the number of commits to show
+
+By default, it starts from HEAD and goes back through parents
+
+---
+
+Formatting the Log
+
+::gitlogb::
+
+---
+
+::gitlogc::
+
+---
+
+# Part 3.3
 ## Detour: Packs and Deltas
 
 ---
