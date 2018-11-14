@@ -120,14 +120,16 @@ Source: https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain
 
 ---
 
-An example SHA-1 hash
+Example SHA-1 hashes
 ```plaintext
-32c65e86d72d50be78c536f79d8036604eb713b1
+6aeb411c21381069e37981f0e97e1b6bd26f9ff5
+109c6766058225867c46ebe79d1ff113ac7edf6d
 ```
 
-Short hash
+Short hashes
 ```plaintext
-32c65e8
+6aeb411
+109c676
 ```
 
 Note:
@@ -190,17 +192,7 @@ Nb: Empty commit messages are allowed, but it's almost never a good idea to crea
 ---
 
 Check the object store again
-```bash
-.git/objects
-├── 32/
-│   └── c65e86d72d50be78c536f79d8036604eb713b1
-├── 55/
-│   └── 2e539f0238d49549d0f7be59f6b8aae99c57c3
-├── dc/
-│   └── d0c23a90b9a55df7caa0c5c182254ace2e0be4
-├── info/
-└── pack/
-```
+::firstobjectstore::
 
 Three objects. What do they represent?
 
@@ -228,18 +220,8 @@ We will use two options or variants of the `cat-file` command.
 
 ---
 
-```bash
-$ git cat-file -t 552e539f0238d49549d0f7be59f6b8aae99c57c3
-commit
-```
-```bash
-$ git cat-file -p 552e539f0238d49549d0f7be59f6b8aae99c57c3
-tree dcd0c23a90b9a55df7caa0c5c182254ace2e0be4
-author Achilleas Koutsou <ak@example.com> 1542119518 +0100
-committer Achilleas Koutsou <ak@example.com> 1542119518 +0100
-
-Initial commit: Add README
-```
+::cattcommit1::
+::catpcommit1::
 
 Note:
 First object is a `commit`. It's the revision or snapshot we made with the `git commit` command. If we print its contents, we can see all the information associated with the commit.
@@ -253,14 +235,8 @@ You may notice one more piece of information there: The `tree`. This is a refere
 
 ---
 
-```bash
-$ git cat-file -t dcd0c23a90b9a55df7caa0c5c182254ace2e0be4
-tree
-```
-```bash
-$ git cat-file -p dcd0c23a90b9a55df7caa0c5c182254ace2e0be4
-100644 blob 32c65e86d72d50be78c536f79d8036604eb713b1    README.md
-```
+::catttree1::
+::catptree1::
 
 Note:
 A `tree` is analogous to a filesystem directory. It contains a list of references to files: in this case, the README file we added to the commit with the `git add` command.

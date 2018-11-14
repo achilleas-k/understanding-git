@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+scriptloc=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+
+replace() {
+keyword=$1
+string=$2
+python << END
+with open("${scriptloc}/slides.md") as slides:
+    content = slides.read()
+
+string = """${string}"""
+print(r"Replacing ${keyword} with " + string)
+with open("${scriptloc}/slides.md", "w") as slides:
+    slides.write(content.replace(r"${keyword}", string))
+END
+}
 
 mdprint() {
     cmd=$*
@@ -29,10 +44,12 @@ mdprint tree -F .git/objects
 # Add a README and commit
 mdprint 'echo "# Understanding Git: Presentation slides repository" > README.md'
 mdprint git add README.md
-mdprint 'git commit -m "Initial commit: Add README"'
+firstcommit=$(mdprint 'git commit -m "Initial commit: Add README"')
+replace "::firstcommit::" "${firstcommit}"
 
 # Check the object store again
-mdprint tree -F .git/objects
+firstobjectstore=$(mdprint tree -F .git/objects)
+replace "::firstobjectstore::" "${firstobjectstore}"
 
 filepaths1=$(find .git/objects -type f)
 
@@ -41,15 +58,20 @@ for path in ${filepaths1}; do
     prefix=${path:13:2}
     rest=${path:16}
     full=${prefix}${rest}
-    mdprint git cat-file -t ${full}
-    mdprint git cat-file -p ${full}
+    type=$(git cat-file -t ${full})
+    cattype=$(mdprint git cat-file -t ${full})
+    catprint=$(mdprint git cat-file -p ${full})
+    replace "::catt${type}1::" "${cattype}"
+    replace "::catp${type}1::" "${catprint}"
 done
 
 # These objects are compressed so we can't read them directly
-mdprint git rev-parse HEAD
+head=$(git rev-parse HEAD)
 
-mdprint git cat-file -t HEAD
-mdprint git cat-file -p HEAD
+cattcommit1=$(mdprint git cat-file -t ${head})
+replace "::cattcommit1::" "${cattcommit1}"
+catpcommit1=$(mdprint git cat-file -p ${head})
+replace "::catpcommit1::" "${catpcommit1}"
 
 # Let's make one more commit so we can see the parent
 mdprint 'echo -e "# Understanding Git\n\n> Achilleas Koutsou\n\n2018-11-14" > slides.md'
