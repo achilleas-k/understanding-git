@@ -15,6 +15,19 @@ revealOptions:
 
 ---
 
+# Part 0
+## Preface
+
+Note:
+Who here:
+- has worked with Git before?
+- uses Git regularly?
+- uses Git to collaborate with other people?
+
+If you're completely unfamiliar with Git, this talk will probably give you some basics to get started, but more importantly, it should give you enough knowledge so that if you go through a beginner's tutorial (of which there are plenty), it will be easier to *understand* the tutorial in more depth.
+
+---
+
 # Part 1
 ## Porcelain and Plumbing
 
@@ -53,8 +66,6 @@ Inspect the *plumbing* to gain a deeper understanding of the *porcelain*
 
 Note:
 I wont be talking much about individual plumbing commands, but we will be using some to inspect the inner workings of Git as we go along. For me today it's not important that you walk away with a bunch of new commands that you can use. I want you to walk away with a deeper understanding of Git's inner workings, to the point where you can apply that knowledge to create more powerful workflows yourselves.
-
-If you're completely unfamiliar with Git, this talk will probably give you some basics to get started, but more importantly, it should give you enough knowledge so that if you go through a beginner's tutorial (of which there are plenty), it will be easier to *understand* the tutorial in more depth.
 
 ---
 
