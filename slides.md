@@ -877,9 +877,89 @@ Formatting the Log
 
 ::gitlogb::
 
+Note:
+We can pass formatting directives to add information like the parent
+
 ---
 
 ::gitlogc::
+
+Note:
+And with the graph and the oneline option, we can get a nice condensed view of the log graph
+
+---
+
+# Part 3.3
+## Back to branches
+
+---
+
+Demo code is ready. Now what?
+
+Note:
+So let's fast forward and assume that the work we were doing in the demo code branch is done.
+
+We're now ready to integrate it into the main part of the project.
+
+---
+
+::gitlogd::
+
+Note:
+This is the current state of our repository. The decorate flag adds the names of refs like HEAD and branch names to the log.
+
+So the demo-code branch has a few commits in it and we want to bring those into master
+
+---
+
+`git merge <branch>` joins multiple development histories together
+
+Note:
+The merge command brings two or more branches together.
+
+It replays the changes that were made in the named branch since the branch point and then creates a *merge commit* that incorporates those changes into the base branch (the branch we're running the command from).
+
+---
+
+```bash
+$ git checkout master
+Switched to branch 'master'
+```
+::gitmergea::
+
+Note:
+To merge the demo code branch into master, we first switch to master since we want it to be our base branch, and then we git merge the code branch.
+
+---
+
+::gitloge::
+
+Note:
+If we look at our graph now for the commit history, we can see the two branches merging
+
+---
+
+::gitlogf::
+
+Note:
+Note that if we simply look at master branch on its own, the changes that were made in the code branch are now part of master's history, as well as the one commit we made on the master branch after the branching point.
+
+---
+
+The merge commit
+
+::gitcatpmerge::
+
+Note:
+This is what the merge commit looks like. Notice anything interesting?
+
+It has two parents. This was expected, since it merged two branches.
+
+So we learned something new again about commits: They don't always have just one parent. In fact they can have any number of parents.
+
+Fun bit of trivia: In the Linux Kernel history, there are many commits with dozens of parents. The biggest one I know of has 66 parents!
+
+https://www.destroyallsoftware.com/blog/2017/the-biggest-and-weirdest-commits-in-linux-kernel-git-history
 
 ---
 

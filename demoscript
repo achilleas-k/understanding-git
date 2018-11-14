@@ -199,6 +199,36 @@ replace "::gitlogb::" "${gitlogb}"
 gitlogc=$(mdprint 'git log --graph --oneline master demo-code')
 replace "::gitlogc::" "${gitlogc}"
 
+git checkout demo-code
+echo "<code line 1>" >> demoscript
+git commit demoscript -m "Writing script"
+echo "<code line 2>" >> demoscript
+git commit demoscript -m "Finalising script"
+
+gitlogd=$(mdprint 'git log --graph --decorate --oneline master demo-code')
+replace "::gitlogd::" "${gitlogd}"
+
+export GIT_MERGE_AUTOEDIT=no
+mdprint git checkout master
+gitmergea=$(mdprint git merge demo-code)
+replace "::gitmergea::" "${gitmergea}"
+
+gitloge=$(mdprint 'git log --graph --decorate --oneline master demo-code')
+replace "::gitloge::" "${gitloge}"
+
+
+gitlogf=$(mdprint 'git log --oneline master')
+replace "::gitlogf::" "${gitlogf}"
+
+gitcatpheadtld1b=$(mdprint 'git cat-file -p HEAD~1')
+replace "::gitcatpheadtld1b::" "${gitcatpheadtld1b}"
+
+gitcatpheadtldcln1b=$(mdprint 'git cat-file -p HEAD~1:')
+replace "::gitcatpheadtld1clnb::" "${gitcatpheadtldcln1b}"
+
+gitcatpmerge=$(mdprint 'git cat-file -p HEAD')
+replace "::gitcatpmerge::" "${gitcatpmerge}"
+
 exit
 
 # ---------------
