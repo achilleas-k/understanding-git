@@ -26,3 +26,7 @@ Some presentation notes can be found in the [notes file](./notes.md). This inclu
 - [v1.0](85d543dfd0239d9a22e7d11f3d6bf9da22b5ae13): The slides in the form they were presented during the [Super Python Talk](https://www.meetup.com/SuperPythonTalks/events/256145090/) (14 Nov 2018).
 
 The slides, notes, and script may be modified in the future. New versions will be tagged when appropriate.
+
+## License
+
+All content in this repository is licensed under the [Creative Commons Attribution Share Alike 4.0 International](./LICENSE) license.
