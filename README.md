@@ -14,3 +14,15 @@ Slides are written in markdown and were presented using [reveal-md](http://webpr
 ```bash
 reveal-md slides.md
 ```
+
+The header in [slides file](./slides.md) sets the black theme and sets a few modifications found in the [custom stylesheet](./style.css) by default.
+
+## Notes
+
+Some presentation notes can be found in the [notes file](./notes.md). This includes notes and thoughts that were added to the presentation as well as ideas that were not included for time and complexity. It may, in the future, turn into a more coherent accompanying text for the talk.
+
+## Versions
+
+- [v1.0](85d543dfd0239d9a22e7d11f3d6bf9da22b5ae13): The slides in the form they were presented during the [Super Python Talk](https://www.meetup.com/SuperPythonTalks/events/256145090/) (14 Nov 2018).
+
+The slides, notes, and script may be modified in the future. New versions will be tagged when appropriate.
