@@ -195,7 +195,20 @@ Nb: Empty commit messages are allowed, but it's almost never a good idea to crea
 ---
 
 Check the object store again
-::firstobjectstore::
+```bash
+$ tree -F .git/objects
+.git/objects
+├── 10/
+│   └── 9c6766058225867c46ebe79d1ff113ac7edf6d
+├── 6a/
+│   └── eb411c21381069e37981f0e97e1b6bd26f9ff5
+├── 82/
+│   └── 7b7984168fe0833602c98c31dac93bd50facd8
+├── info/
+└── pack/
+
+5 directories, 3 files
+```
 
 Three objects. What do they represent?
 
@@ -223,8 +236,18 @@ We will use two options or variants of the `cat-file` command.
 
 ---
 
-::cattcommit1::
-::catpcommit1::
+```bash
+$ git cat-file -t 827b7984168fe0833602c98c31dac93bd50facd8
+commit
+```
+```bash
+$ git cat-file -p 827b7984168fe0833602c98c31dac93bd50facd8
+tree 109c6766058225867c46ebe79d1ff113ac7edf6d
+author Achilleas Koutsou <ak@example.com> 1542209857 +0100
+committer Achilleas Koutsou <ak@example.com> 1542209857 +0100
+
+Initial commit: Add README
+```
 
 Note:
 First object is a `commit`. It's the revision or snapshot we made with the `git commit` command. If we print its contents, we can see all the information associated with the commit.
@@ -238,8 +261,14 @@ You may notice one more piece of information there: The `tree`. This is a refere
 
 ---
 
-::catttree1::
-::catptree1::
+```bash
+$ git cat-file -t 109c6766058225867c46ebe79d1ff113ac7edf6d
+tree
+```
+```bash
+$ git cat-file -p 109c6766058225867c46ebe79d1ff113ac7edf6d
+100644 blob 6aeb411c21381069e37981f0e97e1b6bd26f9ff5	README.md
+```
 
 Note:
 A `tree` is analogous to a filesystem directory. It contains a list of references to files: in this case, the README file we added to the commit with the `git add` command.
@@ -250,8 +279,14 @@ Finally, the third object we'll inspect again appears here: It's a reference to 
 
 ---
 
-::cattblob1::
-::catpblob1::
+```bash
+$ git cat-file -t 6aeb411c21381069e37981f0e97e1b6bd26f9ff5
+blob
+```
+```bash
+$ git cat-file -p 6aeb411c21381069e37981f0e97e1b6bd26f9ff5
+# Understanding Git: Presentation slides repository
+```
 
 Note:
 Git uses the term `blob` to refer to file contents. Note that the file name `README.md` doesn't appear anywhere in the blob, only its contents. At the blob level, Git doesn't care about the name of the file. That information is stored in the tree which we saw earlier. The entry in the `tree` object is linked to the `blob` object using the key (hash).
@@ -297,7 +332,15 @@ Note:
 Let's create a second commit and run through our inspection process again.
 
 ---
-::secondobjectstore::
+```bash
+$ find .git/objects -type f
+.git/objects/ec/9d120bad321f68f257d730f893f1a9e8d96854
+.git/objects/12/71443a51490d9457bbf0ccd05805d9948cdc2f
+.git/objects/94/6086806911f33c726b8e4088bb3ea5a28ac7a2
+.git/objects/82/7b7984168fe0833602c98c31dac93bd50facd8
+.git/objects/10/9c6766058225867c46ebe79d1ff113ac7edf6d
+.git/objects/6a/eb411c21381069e37981f0e97e1b6bd26f9ff5
+```
 
 3 new objects
 
@@ -308,8 +351,19 @@ Let's have a look at the new files.
 
 ---
 
-::cattcommit2::
-::catpcommit2::
+```bash
+$ git cat-file -t ec9d120bad321f68f257d730f893f1a9e8d96854
+commit
+```
+```bash
+$ git cat-file -p ec9d120bad321f68f257d730f893f1a9e8d96854
+tree 1271443a51490d9457bbf0ccd05805d9948cdc2f
+parent 827b7984168fe0833602c98c31dac93bd50facd8
+author Achilleas Koutsou <ak@example.com> 1542209857 +0100
+committer Achilleas Koutsou <ak@example.com> 1542209857 +0100
+
+Add first presentation slide
+```
 
 Note:
 Just like last time, the first object is a `commit`. It's our new commit, where we added the presentation slide. Notice anything different?
@@ -320,8 +374,15 @@ If you look at the hash, it's the key of the first (initial) commit. Let's look 
 
 ---
 
-::catttree2::
-::catptree2::
+```bash
+$ git cat-file -t 1271443a51490d9457bbf0ccd05805d9948cdc2f
+tree
+```
+```bash
+$ git cat-file -p 1271443a51490d9457bbf0ccd05805d9948cdc2f
+100644 blob 6aeb411c21381069e37981f0e97e1b6bd26f9ff5	README.md
+100644 blob 946086806911f33c726b8e4088bb3ea5a28ac7a2	slides.md
+```
 
 Note:
 Again, the second object is a `tree`. The tree now has two entries. The README.md from before and the slides.md we just added.
@@ -330,8 +391,18 @@ Note that the key for the README.md file is the same as before. Since the file w
 
 ---
 
-::cattblob2::
-::catpblob2::
+```bash
+$ git cat-file -t 946086806911f33c726b8e4088bb3ea5a28ac7a2
+blob
+```
+```bash
+$ git cat-file -p 946086806911f33c726b8e4088bb3ea5a28ac7a2
+# Understanding Git
+
+> Achilleas Koutsou
+
+2018-11-14
+```
 
 Note:
 The third new object is the contents of slides.md, as expected.
@@ -389,7 +460,18 @@ Let's do one more commit. This time, we'll modify an existing file. We'll add a 
 
 ---
 
-::thirdobjectstore::
+```bash
+$ find .git/objects -type f
+.git/objects/99/96248128ecd668be86434a05906e4edbbcc58e
+.git/objects/3a/636d581e8d0ea6394d38ec214037000f454c4f
+.git/objects/52/5a01c6209eab6d44bab1274f75763b57cfcd3f
+.git/objects/ec/9d120bad321f68f257d730f893f1a9e8d96854
+.git/objects/12/71443a51490d9457bbf0ccd05805d9948cdc2f
+.git/objects/94/6086806911f33c726b8e4088bb3ea5a28ac7a2
+.git/objects/82/7b7984168fe0833602c98c31dac93bd50facd8
+.git/objects/10/9c6766058225867c46ebe79d1ff113ac7edf6d
+.git/objects/6a/eb411c21381069e37981f0e97e1b6bd26f9ff5
+```
 
 3 new objects
 
@@ -398,16 +480,34 @@ Again, three new objects. I hope this isn't a surprise by now.
 
 ---
 
-::cattcommit3::
-::catpcommit3::
+```bash
+$ git cat-file -t 9996248128ecd668be86434a05906e4edbbcc58e
+commit
+```
+```bash
+$ git cat-file -p 9996248128ecd668be86434a05906e4edbbcc58e
+tree 3a636d581e8d0ea6394d38ec214037000f454c4f
+parent ec9d120bad321f68f257d730f893f1a9e8d96854
+author Achilleas Koutsou <ak@example.com> 1542209858 +0100
+committer Achilleas Koutsou <ak@example.com> 1542209858 +0100
+
+Add second presentation slide
+```
 
 Note:
 The new commit
 
 ---
 
-::catttree3::
-::catptree3::
+```bash
+$ git cat-file -t 3a636d581e8d0ea6394d38ec214037000f454c4f
+tree
+```
+```bash
+$ git cat-file -p 3a636d581e8d0ea6394d38ec214037000f454c4f
+100644 blob 6aeb411c21381069e37981f0e97e1b6bd26f9ff5	README.md
+100644 blob 525a01c6209eab6d44bab1274f75763b57cfcd3f	slides.md
+```
 
 Note:
 The new tree.
@@ -418,8 +518,22 @@ As far as Git is concerned, this is a completely new object. The fact that there
 
 ---
 
-::cattblob3::
-::catpblob3::
+```bash
+$ git cat-file -t 525a01c6209eab6d44bab1274f75763b57cfcd3f
+blob
+```
+```bash
+$ git cat-file -p 525a01c6209eab6d44bab1274f75763b57cfcd3f
+# Understanding Git
+
+> Achilleas Koutsou
+
+2018-11-14
+
+
+# Part 1
+## Porcelain and Plumbing
+```
 
 Note:
 So if we check the contents of the new hash, we get the new file in its entirety.
@@ -427,7 +541,14 @@ So if we check the contents of the new hash, we get the new file in its entirety
 ---
 
 We can still retrieve the first version of the file
-::catpblob2::
+```bash
+$ git cat-file -p 946086806911f33c726b8e4088bb3ea5a28ac7a2
+# Understanding Git
+
+> Achilleas Koutsou
+
+2018-11-14
+```
 
 Note:
 The original version of the file is of course still available using its hash. The object is still available in the object store, it just isn't part of the working directory. In Git terms: the original blob is not referenced by the tree of the current commit.
@@ -493,7 +614,15 @@ commit
 $ git cat-file -t master
 commit
 ```
-::catpmaster::
+```bash
+$ git cat-file -p master
+tree 3a636d581e8d0ea6394d38ec214037000f454c4f
+parent ec9d120bad321f68f257d730f893f1a9e8d96854
+author Achilleas Koutsou <ak@example.com> 1542209858 +0100
+committer Achilleas Koutsou <ak@example.com> 1542209858 +0100
+
+Add second presentation slide
+```
 
 Note:
 Some examples
@@ -551,17 +680,37 @@ We can use it for just one of its features: getting the object hash from a ref
 
 ---
 
-::rpheada::
+```bash
+$ git rev-parse HEAD
+9996248128ecd668be86434a05906e4edbbcc58e
+```
 
 Translates symbolic name `HEAD` to the `SHA-1` key
 
 ---
 
-::rpheada::
-::rpmastera::
-::catpheada::
+```bash
+$ git rev-parse HEAD
+9996248128ecd668be86434a05906e4edbbcc58e
+```
+```bash
+$ git rev-parse master
+9996248128ecd668be86434a05906e4edbbcc58e
+```
+```bash
+$ git cat-file -p HEAD
+tree 3a636d581e8d0ea6394d38ec214037000f454c4f
+parent ec9d120bad321f68f257d730f893f1a9e8d96854
+author Achilleas Koutsou <ak@example.com> 1542209858 +0100
+committer Achilleas Koutsou <ak@example.com> 1542209858 +0100
 
-::rpheadtld1a::
+Add second presentation slide
+```
+
+```bash
+$ git rev-parse HEAD~1
+ec9d120bad321f68f257d730f893f1a9e8d96854
+```
 
 Note:
 Let's use `rev-parse` for a quick revision
@@ -572,8 +721,15 @@ A commit holds a reference to its parent. We can easily get a reference to this 
 
 ---
 
-::catpmastertld1clna::
-::catpmastertld1rdma::
+```bash
+$ git cat-file -p master~1:
+100644 blob 6aeb411c21381069e37981f0e97e1b6bd26f9ff5	README.md
+100644 blob 946086806911f33c726b8e4088bb3ea5a28ac7a2	slides.md
+```
+```bash
+$ git rev-parse master~1:README.md
+6aeb411c21381069e37981f0e97e1b6bd26f9ff5
+```
 
 Note:
 Appending colon to a ref refers to a tree or blob in that revision/commit.
@@ -693,7 +849,12 @@ We now have three symbolic names that all refer to `c2`. HEAD is the currently c
 
 ---
 
-::rpmasterdemohead::
+```bash
+$ git rev-parse master demo-code HEAD
+9996248128ecd668be86434a05906e4edbbcc58e
+9996248128ecd668be86434a05906e4edbbcc58e
+9996248128ecd668be86434a05906e4edbbcc58e
+```
 
 Note:
 If we inspect all three references using rev-parse, we can verify that they are indeed the same commit.
@@ -746,9 +907,18 @@ With the new commit, we've created a new snapshot on the active branch `demo-cod
 
 ---
 
-::rpmasterb::
-::rpdemob::
-::rpheadb::
+```bash
+$ git rev-parse master
+9996248128ecd668be86434a05906e4edbbcc58e
+```
+```bash
+$ git rev-parse demo-code
+d93ab342e3f19e2551605c2bee760d68b1115760
+```
+```bash
+$ git rev-parse HEAD
+d93ab342e3f19e2551605c2bee760d68b1115760
+```
 
 Note:
 Let's again verify using rev-parse to see our object hashes
@@ -766,9 +936,18 @@ Move `HEAD` to point to `master`
 ```bash
 $ git checkout master
 ```
-::rpmasterc::
-::rpdemoc::
-::rpheadc::
+```bash
+$ git rev-parse master
+9996248128ecd668be86434a05906e4edbbcc58e
+```
+```bash
+$ git rev-parse demo-code
+d93ab342e3f19e2551605c2bee760d68b1115760
+```
+```bash
+$ git rev-parse HEAD
+9996248128ecd668be86434a05906e4edbbcc58e
+```
 
 ---
 ```bash
@@ -845,7 +1024,11 @@ It should also be clearer now why branches are called branches.
 
 ---
 
-::rpmasterdemod::
+```bash
+$ git rev-parse master~1 demo-code~1
+9996248128ecd668be86434a05906e4edbbcc58e
+9996248128ecd668be86434a05906e4edbbcc58e
+```
 
 Note:
 Let's verify our diagram
@@ -864,7 +1047,20 @@ git log is a powerful tool for exploring the commit history. It prints a sequenc
 
 ---
 
-::gitloga::
+```bash
+$ git log -n 2
+commit fe10223bade3ae70211810135c636ed4c9461410
+Author: Achilleas Koutsou <ak@example.com>
+Date:   Wed Nov 14 16:37:40 2018 +0100
+
+    Add third presentation slide
+
+commit 9996248128ecd668be86434a05906e4edbbcc58e
+Author: Achilleas Koutsou <ak@example.com>
+Date:   Wed Nov 14 16:37:38 2018 +0100
+
+    Add second presentation slide
+```
 
 Note:
 The -n flag limits the number of commits to show
@@ -875,14 +1071,35 @@ By default, it starts from HEAD and goes back through parents
 
 Formatting the Log
 
-::gitlogb::
+```bash
+$ git log --pretty=format:"Commit: %h | Parent: %p | Tree: %t %n Message: %s%n"
+Commit: fe10223 | Parent: 9996248 | Tree: 10b7222 
+ Message: Add third presentation slide
+
+Commit: 9996248 | Parent: ec9d120 | Tree: 3a636d5 
+ Message: Add second presentation slide
+
+Commit: ec9d120 | Parent: 827b798 | Tree: 1271443 
+ Message: Add first presentation slide
+
+Commit: 827b798 | Parent:  | Tree: 109c676 
+ Message: Initial commit: Add README
+```
 
 Note:
 We can pass formatting directives to add information like the parent
 
 ---
 
-::gitlogc::
+```bash
+$ git log --graph --oneline master demo-code
+* fe10223 Add third presentation slide
+| * d93ab34 Add demoscript
+|/  
+* 9996248 Add second presentation slide
+* ec9d120 Add first presentation slide
+* 827b798 Initial commit: Add README
+```
 
 Note:
 And with the graph and the oneline option, we can get a nice condensed view of the log graph
@@ -903,7 +1120,17 @@ We're now ready to integrate it into the main part of the project.
 
 ---
 
-::gitlogd::
+```bash
+$ git log --graph --decorate --oneline master demo-code
+* fe10223 (master) Add third presentation slide
+| * fde81d0 (HEAD -> demo-code) Finalising script
+| * 29454af Writing script
+| * d93ab34 Add demoscript
+|/  
+* 9996248 Add second presentation slide
+* ec9d120 Add first presentation slide
+* 827b798 Initial commit: Add README
+```
 
 Note:
 This is the current state of our repository. The decorate flag adds the names of refs like HEAD and branch names to the log.
@@ -925,21 +1152,49 @@ It replays the changes that were made in the named branch since the branch point
 $ git checkout master
 Switched to branch 'master'
 ```
-::gitmergea::
+```bash
+$ git merge demo-code
+Merge made by the 'recursive' strategy.
+ demoscript | 3 +++
+ 1 file changed, 3 insertions(+)
+ create mode 100755 demoscript
+```
 
 Note:
 To merge the demo code branch into master, we first switch to master since we want it to be our base branch, and then we git merge the code branch.
 
 ---
 
-::gitloge::
+```bash
+$ git log --graph --decorate --oneline master demo-code
+*   6f9ec6e (HEAD -> master) Merge branch 'demo-code'
+|\  
+| * fde81d0 (demo-code) Finalising script
+| * 29454af Writing script
+| * d93ab34 Add demoscript
+* | fe10223 Add third presentation slide
+|/  
+* 9996248 Add second presentation slide
+* ec9d120 Add first presentation slide
+* 827b798 Initial commit: Add README
+```
 
 Note:
 If we look at our graph now for the commit history, we can see the two branches merging
 
 ---
 
-::gitlogf::
+```bash
+$ git log --oneline master
+6f9ec6e Merge branch 'demo-code'
+fe10223 Add third presentation slide
+fde81d0 Finalising script
+29454af Writing script
+d93ab34 Add demoscript
+9996248 Add second presentation slide
+ec9d120 Add first presentation slide
+827b798 Initial commit: Add README
+```
 
 Note:
 Note that if we simply look at master branch on its own, the changes that were made in the code branch are now part of master's history, as well as the one commit we made on the master branch after the branching point.
@@ -948,7 +1203,16 @@ Note that if we simply look at master branch on its own, the changes that were m
 
 The merge commit
 
-::gitcatpmerge::
+```bash
+$ git cat-file -p HEAD
+tree 276ee42784728b06ab2a29cd9b9c4a9a5780532c
+parent fe10223bade3ae70211810135c636ed4c9461410
+parent fde81d040de70c84f8661148fba797ac0ffe266f
+author Achilleas Koutsou <ak@example.com> 1542209860 +0100
+committer Achilleas Koutsou <ak@example.com> 1542209860 +0100
+
+Merge branch 'demo-code'
+```
 
 Note:
 This is what the merge commit looks like. Notice anything interesting?
@@ -964,7 +1228,7 @@ https://www.destroyallsoftware.com/blog/2017/the-biggest-and-weirdest-commits-in
 ---
 
 # Part 4
-## Safety first
+## Situational Awareness
 
 Note:
 Many times we find ourselves in situations where we want to experiment with some code, or maybe check if we can merge some branches, or we want to go looking for a specific version of a file.
@@ -982,7 +1246,11 @@ Always keep in mind which branch you're on
 
 ---
 
-::gitbranchf::
+```bash
+$ git branch
+  demo-code
+* master
+```
 
 ---
 
@@ -995,7 +1263,57 @@ Check what's going on with respect to other branches
 
 ---
 
-::gitlogall::
+```bash
+$ git log --all --graph
+*   commit 6f9ec6ebfdc1423d0071a7520607a1d9b09c761c
+|\  Merge: fe10223 fde81d0
+| | Author: Achilleas Koutsou <ak@example.com>
+| | Date:   Wed Nov 14 16:37:40 2018 +0100
+| | 
+| |     Merge branch 'demo-code'
+| | 
+| * commit fde81d040de70c84f8661148fba797ac0ffe266f
+| | Author: Achilleas Koutsou <ak@example.com>
+| | Date:   Wed Nov 14 16:37:40 2018 +0100
+| | 
+| |     Finalising script
+| | 
+| * commit 29454af9635f9d280507eaba2b0866520cf73b45
+| | Author: Achilleas Koutsou <ak@example.com>
+| | Date:   Wed Nov 14 16:37:40 2018 +0100
+| | 
+| |     Writing script
+| | 
+| * commit d93ab342e3f19e2551605c2bee760d68b1115760
+| | Author: Achilleas Koutsou <ak@example.com>
+| | Date:   Wed Nov 14 16:37:39 2018 +0100
+| | 
+| |     Add demoscript
+| | 
+* | commit fe10223bade3ae70211810135c636ed4c9461410
+|/  Author: Achilleas Koutsou <ak@example.com>
+|   Date:   Wed Nov 14 16:37:40 2018 +0100
+|   
+|       Add third presentation slide
+| 
+* commit 9996248128ecd668be86434a05906e4edbbcc58e
+| Author: Achilleas Koutsou <ak@example.com>
+| Date:   Wed Nov 14 16:37:38 2018 +0100
+| 
+|     Add second presentation slide
+| 
+* commit ec9d120bad321f68f257d730f893f1a9e8d96854
+| Author: Achilleas Koutsou <ak@example.com>
+| Date:   Wed Nov 14 16:37:37 2018 +0100
+| 
+|     Add first presentation slide
+| 
+* commit 827b7984168fe0833602c98c31dac93bd50facd8
+  Author: Achilleas Koutsou <ak@example.com>
+  Date:   Wed Nov 14 16:37:37 2018 +0100
+  
+      Initial commit: Add README
+```
 
 ---
 
@@ -1007,12 +1325,33 @@ Unsaved changes?
 
 ---
 
-::appendreadme::
-::gitstatusf::
+```bash
+$ echo "See slides.md for slides" >> README.md
+```
+```bash
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
 
 ---
 
-::gitdiff::
+```bash
+$ git diff
+diff --git a/README.md b/README.md
+index 6aeb411..2f1af42 100644
+--- a/README.md
++++ b/README.md
+@@ -1 +1,2 @@
+ # Understanding Git: Presentation slides repository
++See slides.md for slides
+```
 
 ---
 
@@ -1022,7 +1361,28 @@ Unsaved changes?
 
 ---
 
-::gitdiffdemo::
+```bash
+$ git diff demo-code
+diff --git a/README.md b/README.md
+index 6aeb411..2f1af42 100644
+--- a/README.md
++++ b/README.md
+@@ -1 +1,2 @@
+ # Understanding Git: Presentation slides repository
++See slides.md for slides
+diff --git a/slides.md b/slides.md
+index 525a01c..036f63b 100644
+--- a/slides.md
++++ b/slides.md
+@@ -7,3 +7,7 @@
+ 
+ # Part 1
+ ## Porcelain and Plumbing
++
++
++# Part 2
++## What is Git?
+```
 
 ---
 
@@ -1035,11 +1395,24 @@ We've seen so far that git keeps snapshots of the tree every time we commit. If 
 
 ---
 
-::gitcatsrdma::
-::gitcatprdma::
+```bash
+$ git cat-file -s HEAD:README.md
+77
+```
+```bash
+$ git cat-file -p HEAD:README.md
+# Understanding Git: Presentation slides repository
+See slides.md for slides
+```
 
-::gitcatsrdmb::
-::gitcatprdmb::
+```bash
+$ git cat-file -s HEAD~1:README.md
+52
+```
+```bash
+$ git cat-file -p HEAD~1:README.md
+# Understanding Git: Presentation slides repository
+```
 
 Note:
 The two versions of README are the full file. We can even see it from the size. This can become wasteful when projects grow to thousands lines of code. It probably wont create a storage problem, but it's certainly inefficient.
@@ -1052,26 +1425,106 @@ The two versions of README are the full file. We can even see it from the size. 
 
 ---
 
-::ospregc::
+```bash
+$ find .git/objects -type f
+.git/objects/58/57b8574a524a0d69fe85cc15dfe4875caf699b
+.git/objects/86/968948ebcad93c6f01e1282a28d8e149b50be9
+.git/objects/2f/1af4274b97d1909668d51c8a67ec1f5b03645f
+.git/objects/6f/9ec6ebfdc1423d0071a7520607a1d9b09c761c
+.git/objects/27/6ee42784728b06ab2a29cd9b9c4a9a5780532c
+.git/objects/fd/e81d040de70c84f8661148fba797ac0ffe266f
+.git/objects/6b/96c395390b4571635f518fec03c6bc7195adea
+.git/objects/7f/af35404250750545bb376ae09d7a57a4a19304
+.git/objects/a9/98cdf0a62dd456742892c3ad800524565f775d
+.git/objects/56/cf4980fd48882b281cb29564aef64e99a8a9fd
+.git/objects/fe/10223bade3ae70211810135c636ed4c9461410
+.git/objects/03/6f63b2cdbb77e5e964fcc1ca9d993d548b15fa
+.git/objects/d9/3ab342e3f19e2551605c2bee760d68b1115760
+.git/objects/29/454af9635f9d280507eaba2b0866520cf73b45
+.git/objects/29/f3338460c2def04cc34c9e46457fcd7a40b371
+.git/objects/f1/f641af19bf623505554b29f35499b5d15f3fd3
+.git/objects/99/96248128ecd668be86434a05906e4edbbcc58e
+.git/objects/3a/636d581e8d0ea6394d38ec214037000f454c4f
+.git/objects/52/5a01c6209eab6d44bab1274f75763b57cfcd3f
+.git/objects/ec/9d120bad321f68f257d730f893f1a9e8d96854
+.git/objects/12/71443a51490d9457bbf0ccd05805d9948cdc2f
+.git/objects/94/6086806911f33c726b8e4088bb3ea5a28ac7a2
+.git/objects/82/7b7984168fe0833602c98c31dac93bd50facd8
+.git/objects/10/b72226f7e5c353447e78088f8a53bfd5c7e765
+.git/objects/10/9c6766058225867c46ebe79d1ff113ac7edf6d
+.git/objects/6a/eb411c21381069e37981f0e97e1b6bd26f9ff5
+```
 
-::osdupre::
+```bash
+$ du -s .git/objects
+104	.git/objects
+```
 
 Note:
 Let's have a look at the object store as it is now
 
 ---
 
-::gitgc::
-::ospostgc::
-::osdupost::
+```bash
+$ git gc
+```
+```bash
+$ find .git/objects -type f
+.git/objects/info/packs
+.git/objects/pack/pack-bb9e6fb51a758739992e71a094075bfab17ae0ab.idx
+.git/objects/pack/pack-bb9e6fb51a758739992e71a094075bfab17ae0ab.pack
+```
+```bash
+$ du -s .git/objects
+12	.git/objects
+```
 
 Note:
 Run the gc command (garbage collector) to optimise the storage and check the store again
 
 ---
 
-::verifypack::
+```bash
+$ git verify-pack -v .git/objects/pack/pack-bb9e6fb51a758739992e71a094075bfab17ae0ab.pack
+5857b8574a524a0d69fe85cc15dfe4875caf699b commit 241 170 12
+fde81d040de70c84f8661148fba797ac0ffe266f commit 234 162 182
+fe10223bade3ae70211810135c636ed4c9461410 commit 245 168 344
+29454af9635f9d280507eaba2b0866520cf73b45 commit 231 160 512
+6f9ec6ebfdc1423d0071a7520607a1d9b09c761c commit 289 195 672
+d93ab342e3f19e2551605c2bee760d68b1115760 commit 85 97 867 1 fe10223bade3ae70211810135c636ed4c9461410
+9996248128ecd668be86434a05906e4edbbcc58e commit 246 168 964
+827b7984168fe0833602c98c31dac93bd50facd8 commit 195 140 1132
+ec9d120bad321f68f257d730f893f1a9e8d96854 commit 245 169 1272
+2f1af4274b97d1909668d51c8a67ec1f5b03645f blob   77 76 1441
+7faf35404250750545bb376ae09d7a57a4a19304 blob   48 48 1517
+036f63b2cdbb77e5e964fcc1ca9d993d548b15fa blob   117 112 1565
+86968948ebcad93c6f01e1282a28d8e149b50be9 tree   112 119 1677
+6b96c395390b4571635f518fec03c6bc7195adea tree   112 119 1796
+6aeb411c21381069e37981f0e97e1b6bd26f9ff5 blob   4 15 1915 1 2f1af4274b97d1909668d51c8a67ec1f5b03645f
+525a01c6209eab6d44bab1274f75763b57cfcd3f blob   4 15 1930 1 036f63b2cdbb77e5e964fcc1ca9d993d548b15fa
+10b72226f7e5c353447e78088f8a53bfd5c7e765 tree   74 80 1945
+a998cdf0a62dd456742892c3ad800524565f775d tree   112 119 2025
+56cf4980fd48882b281cb29564aef64e99a8a9fd blob   34 44 2144
+276ee42784728b06ab2a29cd9b9c4a9a5780532c tree   25 38 2188 1 6b96c395390b4571635f518fec03c6bc7195adea
+29f3338460c2def04cc34c9e46457fcd7a40b371 tree   112 119 2226
+f1f641af19bf623505554b29f35499b5d15f3fd3 blob   20 30 2345
+3a636d581e8d0ea6394d38ec214037000f454c4f tree   74 79 2375
+109c6766058225867c46ebe79d1ff113ac7edf6d tree   37 48 2454
+1271443a51490d9457bbf0ccd05805d9948cdc2f tree   74 79 2502
+946086806911f33c726b8e4088bb3ea5a28ac7a2 blob   4 15 2581 1 036f63b2cdbb77e5e964fcc1ca9d993d548b15fa
+non delta: 21 objects
+chain length = 1: 5 objects
+.git/objects/pack/pack-bb9e6fb51a758739992e71a094075bfab17ae0ab.pack: ok
+```
 
 ---
 
 This is done automatically on occasion, so you don't need to worry about running `gc` manually.
+
+---
+
+# EOF
+
+This talk and accompanying material will be available at
+
+`https://github.com/achilleas-k/understanding-git`
