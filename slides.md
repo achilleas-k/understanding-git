@@ -1365,8 +1365,10 @@ index 6aeb411..2f1af42 100644
 ---
 
 - How your current branch differs from another (e.g., `master`)
-  - `git diff master`: Shows how the content of the files in the current working tree differ from the master tree
+  - `git diff master`
+    - Shows how the content of the files in the current working tree differ from the master tree
   - `git diff --name-only master`
+    - List the names of the files that differ
 
 ---
 
