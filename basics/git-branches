@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+scriptloc=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+
+r() {
+    cmd=$*
+    echo "\$ $cmd"
+    eval $cmd
+    echo "------------"
+}
+
+
+tmpdir=$(mktemp -d)
+pushd ${tmpdir}
+
+# delete temporary directory on script exit
+cleanup() {
+    rm -rf "${tmpdir}"
+}
+
+trap cleanup EXIT
+
+clear
+
+# Initialise repository
+r git init
+
+git config --local user.name "Achilleas Koutsou"
+git config --local user.email "ak@example.com"
+
+
+echo "
+# Demo repository
+
+Repository for demonstrating git workflow and branches
+" > README.md
+git add README.md
+git commit -m '"Initial commit: Add README"'
+mkdir src
+echo "import sys
+
+
+def main():
+    args = sys.argv
+    print(f'Script name {args[0]}')
+    print('Arguments received')
+    for idx, arg in enumerate(sys.agv):
+        print(f'{idx}: {arg}')
+
+if __name__ == "__main__":
+    main()
+" > src/script.py
+git add src
+git commit -m '"Add script.py"'
+
+clear
+r git status
+r git log
+read
+clear
