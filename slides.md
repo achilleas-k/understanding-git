@@ -763,12 +763,21 @@ See if you can predict the output of the tree commands.
 
 ---
 
-1. `git rev-parse c1:`
-  - A: t1
-2. `git rev-parse c2~2`
-  - A: c0
-3. `git cat-file -t c2~1:`
-  - A: tree
+The current state of our repository
+
+```bash
+          .----------.      .----------.      .----------.
+          | c0       | <--- | c1       | <--- | c2       |
+          |----------|      |----------|      |----------|
+          |          |      | par:  c0 |      | par:  c1 |
+          | tree: t0 |      | tree: t1 |      | tree: t2 |
+          ·----------·      ·----------·      ·----------·
+```
+
+Quiz time! What is the output of:
+1. `git rev-parse c1:` — t1
+2. `git rev-parse c2~2` — c0
+3. `git cat-file -t c2:` — tree
 
 Note:
 `c1:` is the root tree of the second commit, `t1`
