@@ -104,31 +104,6 @@ Lets run through an example workflow where we visit all the states and perform a
 
 ---
 
-## Begin
-
-::init::
-
-::status1::
-
----
-
-## File states: git status
-
-```bash
-$ git status
-On branch master
-Your branch is up to date with 'origin/master'.
-
-nothing to commit, working tree clean
-```
-
-All files in the directory (if any) are *Unmodified*.
-
-Note:
-The state of a repository where everything known to 
-
----
-
 # EOF
 
 These slides and accompanying material are available at
