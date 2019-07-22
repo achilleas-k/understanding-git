@@ -15,11 +15,11 @@ Slides are written in markdown and were presented using [reveal-md](http://webpr
 reveal-md slides.md
 ```
 
-The header in [slides file](./slides.md) sets the black theme and sets a few modifications found in the [custom stylesheet](./style.css) by default.
+The header in [slides file](./porcelain-and-plumbing/slides.md) sets the black theme and sets a few modifications found in the [custom stylesheet](./style.css) by default.
 
 ## Notes
 
-Some presentation notes can be found in the [notes file](./notes.md). This includes notes and thoughts that were added to the presentation as well as ideas that were not included for time and complexity. It may, in the future, turn into a more coherent accompanying text for the talk.
+Some presentation notes can be found in the [notes file](./porcelain-and-plumbing/notes.md). This includes notes and thoughts that were added to the presentation as well as ideas that were not included for time and complexity. It may, in the future, turn into a more coherent accompanying text for the talk.
 
 ## Versions
 
