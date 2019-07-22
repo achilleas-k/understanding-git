@@ -1,0 +1,201 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+scriptloc=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+
+r() {
+    cmd=$*
+    echo "\$ $cmd"
+    eval $cmd
+    echo "------------"
+}
+
+
+tmpdir=$(mktemp -d)
+pushd ${tmpdir}
+
+# delete temporary directory on script exit
+cleanup() {
+    rm -rf "${tmpdir}"
+}
+
+trap cleanup EXIT
+
+clear
+
+# Initialise repository
+r git init
+
+git config --local user.name "Achilleas Koutsou"
+git config --local user.email "ak@example.com"
+
+r git status
+
+echo ":: Status: Initialised; no commits; no files"
+read
+clear
+
+# ADD README
+
+echo "
+# Demo repository
+
+Repository for demonstrating git workflow and file state cycle
+" > README.md
+
+r git status
+echo ":: Status: No commits; one *untracked* file"
+read
+clear
+
+r git add README.md
+
+r git status
+echo ":: Status: No commits; one *tracked* file, *staged*"
+read
+clear
+
+# Commit
+
+r git commit -m '"Initial commit: Add README"'
+
+r git status
+echo ":: Status: Clean! One unmodified file (doesn't show up in status)"
+read
+clear
+
+# EDIT README
+echo "
+
+© AK 2019
+" >> README.md
+
+r git status
+echo ":: Status: README is modified"
+read
+clear
+
+# STAGE README
+
+git add -u  # -u stages all *tracked* *modified* files (stands for update); does not add untracked files
+
+r git status
+echo ":: Status: README is staged"
+read
+clear
+
+# Create python file in source directory
+mkdir src
+echo "import sys
+
+
+def main():
+    args = sys.argv
+    print(f'Script name {args[0]}')
+    print('Arguments received')
+    for idx, arg in enumerate(sys.agv):
+        print(f'{idx}: {arg}')
+
+if __name__ == "__main__":
+    main()
+" > src/script.py
+
+r git status
+echo ":: Status: A new file appears, so it's untracked"
+echo ":: Since the entire 'src' directory is untracked, we only see the name of the directory"
+read
+clear
+
+# ADD the script
+git add src
+r git status
+echo ":: Status: Both files are staged"
+read
+clear
+
+# Commit staged files
+r git commit -m '"Add script.py and copyright year"'
+
+r git status
+echo ":: Status: Commit done; all is clean"
+read
+clear
+
+# Moving backwards through states
+echo "Just some notes, do not commit" > notes.txt
+git add notes.txt
+
+r git status
+echo ":: Status: New staged file; added accidentally"
+read
+clear
+
+# Unstage it
+r git reset HEAD notes.txt
+
+r git status
+echo ":: Status: unstaged (back to untracked) using 'git reset HEAD'"
+read
+clear
+
+# Let's try that with one of our tracked files
+echo "Another note" > src/script.py
+
+r git status
+r cat src/script.py
+echo ":: OH NO! We wiped our script"
+read
+
+r git checkout -- src/script.py
+r git status
+r cat src/script.py
+echo ":: SAVED"
+read
+clear
+
+# Let's do that again
+echo "Note three" > src/script.py
+
+r git add src
+r git commit -m '"Commit: some notes"'
+
+r git status
+echo ":: All clean except untracked notes"
+read
+
+r cat src/script.py
+echo ":: Oops, we overwrote our script (again) and committed it!"
+read
+clear
+
+r git log
+echo ":: git log: repository history"
+read
+clear
+
+# Let's find out when this happened
+r git log -- src/script.py
+echo ":: History of specific file"
+read
+clear
+
+# Can also show the actual changes
+r git log -p -- src/script.py
+echo ":: History with differences (-p: patch)"
+read
+clear
+
+# Previous commit has our file in good condition
+r git checkout HEAD~1 -- src/script.py
+r cat src/script.py
+r git status
+echo ":: Status: checked out old version of file; the checkout also staged the change"
+
+# Commit the correction
+r git commit -m '"Get back good script.py"'
+r git status
+read
+clear
+
+r git log
+read
