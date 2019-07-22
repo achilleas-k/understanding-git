@@ -71,7 +71,7 @@ Once *added* to a git repository, a file can exist in one of three states, *unmo
 
 ---
 
-## File states
+## File states: Transitions
 
 ```
    .------------.  .------------.  .------------.  .------------.
@@ -95,9 +95,24 @@ This illustrates the states of a file and the actions that make it transition fr
 
 ---
 
-## File states
+# Part 2
 
-### All clean
+## Workflow
+
+Note:
+Lets run through an example workflow where we visit all the states and perform all the transition actions
+
+---
+
+## Begin
+
+::init::
+
+::status1::
+
+---
+
+## File states: git status
 
 ```bash
 $ git status

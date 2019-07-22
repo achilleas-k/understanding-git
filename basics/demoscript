@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+scriptloc=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
+
+replace() {
+keyword=$1
+string=$2
+python << END
+with open("${scriptloc}/slides.md") as slides:
+    content = slides.read()
+
+string = """${string}"""
+with open("${scriptloc}/slides.md", "w") as slides:
+    slides.write(content.replace(r"${keyword}", string))
+END
+}
+
+mdprint() {
+    cmd=$*
+    echo '```bash'
+    echo '$' ${cmd}
+    eval ${cmd}
+    echo '```'
+}
+
+tmpdir=$(mktemp -d)
+pushd ${tmpdir}
+
+# delete temporary directory on script exit
+trap "rm -fr ${tmpdir}" 0
+
+# Initialise repository
+init=$(mdprint git init)
+replace "::init::" "${init}"
+
+git config --local user.name "Achilleas Koutsou"
+git config --local user.email "ak@example.com"
+
+status1=$(mdprint git status)
+replace "::status1::" "${status1}"
+
+exit
