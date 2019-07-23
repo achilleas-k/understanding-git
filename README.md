@@ -4,6 +4,8 @@ This repository contains two presentations
 - [Basics](#basics): A slideshow and demonstration script for Git basics, explaining file states and file state transitions.
 - [Porcelain and plumbing](#porcelain-and-plumbing): A slideshow exploring Git internals with the use of git *plumbing* commands.
 
+The [custom stylesheet](./style.css) in the root of the repository is used by both slide decks for theming tweaks.
+
 
 ## Basics
 
@@ -41,8 +43,6 @@ Slides are written in markdown and were presented using [reveal-md](http://webpr
 ```bash
 reveal-md ./porcelain-and-plumbing/slides.md
 ```
-
-The header in [slides file](./porcelain-and-plumbing/slides.md) sets the black theme and sets a few modifications found in the [custom stylesheet](./style.css) by default.
 
 ### Notes
 
