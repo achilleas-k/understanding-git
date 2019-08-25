@@ -53,6 +53,6 @@ Some presentation notes can be found in the [notes file](./porcelain-and-plumbin
 
 The slides, notes, and script may be modified in the future. New versions will be tagged when appropriate.
 
-## License
+## License [![Creative Commons License](https://i.creativecommons.org/l/by-sa/4.0/80x15.png)](http://creativecommons.org/licenses/by-sa/4.0/)
 
-All content in this repository is licensed under the [Creative Commons Attribution Share Alike 4.0 International](./LICENSE) license.
+All content in this repository is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](./LICENSE).
