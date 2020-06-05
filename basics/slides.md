@@ -329,8 +329,7 @@ This is why clean, short commit messages are important.
 
 # EOF
 
-These slides and accompanying material are available at
+Slides and accompanying material at
 
-`https://github.com/achilleas-k/understanding-git`
-and
-`https://gin.g-node.org/achilleas/understanding-git`
+https://github.com/achilleas-k/understanding-git
+https://gin.g-node.org/achilleas/understanding-git
