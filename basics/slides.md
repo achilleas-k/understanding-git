@@ -327,6 +327,19 @@ This is why clean, short commit messages are important.
 
 ---
 
+### History
+
+```text
+$ git log --oneline
+78e8ffc Remove notes file
+b29f432 Add heading for notes
+3c1915a First commit: Add notes.txt
+```
+
+The log can be formatted and condensed in many ways to make it easier to read.
+
+---
+
 # EOF
 
 Slides and accompanying material at
